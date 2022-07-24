@@ -1,0 +1,7 @@
+system.port: 8090
+server1:
+  ip : 192.168.75.130
+  port : 8070
+server2:
+  ip : 192.168.75.133
+  port : 8060

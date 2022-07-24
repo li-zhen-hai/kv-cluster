@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package test;
+
+message test {
+    string name=1;
+}
+ 
+message Person {
+  string name = 1;
+  int32 id = 2;
+  optional string email = 3;
+}
+
+
+message LogEntry {
+  int32 index=1;
+  int32 term=2;
+  string value=3;
+}
+
+message AppendLogEntryArgs{
+    int32 term=1;
+    int32 leaderId=2;
+    int32 prevLogIndex=3;
+    int32 prevLogTerm=4;
+    repeated LogEntry entries=5;
+    int32 leaderCommit=6;
+};
+
+message AppendLogEntryReply{
+    int32 term=1;
+    bool success=2;
+
+    int32 nextTryLog=3;
+};
+
+message RequestVoteArgs{
+    int32 term=1;
+    int32 candidateId=2;
+    int32 lastLogIndex=3;
+    int32 lastLogTerm=4;
+
+};
+
+message RequestVoteReply{
+    int32 term=1;
+    bool voteGranted=2;
+};
+
+message InstallSnapshotArgs{
+    int32 term=1;
+    int32 leaderId=2;
+    int32 lastIncludeIndex=3;
+    int32 lastIncludeTerm=4;
+    map<string,string> data=5;
+};
+
+message InstallSnapshotReply{
+    int32 term=1;
+};
