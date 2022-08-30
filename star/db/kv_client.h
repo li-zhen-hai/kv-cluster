@@ -46,11 +46,13 @@ public:
 
     bool ApplySnapshot(std::unordered_map<std::string,std::pair<std::string,uint64_t>> shot);
 
-    std::vector<std::string> GetAllKey();
+    // std::vector<std::string> GetAllKey();
 
-    Data erase(std::string key);
+    // Data erase(std::string key);
 
     void close();
+
+    bool clean();
 
     ~kv_client();
 private:

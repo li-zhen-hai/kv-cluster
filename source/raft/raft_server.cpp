@@ -13,11 +13,7 @@ namespace star{
 
 static ConfigVar<std::vector<std::string>>::ptr g_raft_servers =
         Config::Lookup<std::vector<std::string>>("raft_server",{},"server");
-
-static ConfigVar<std::string>::ptr g_zk_servers =
-        Config::Lookup<std::string>("zk_server","","server");     
-    
-//static ConfigVar<std::string>::ptr g_register_server = Config::Lookup<std::string>("register_server","127.0.0.1:8080","register server ip");
+ 
 
 static ConfigVar<uint64_t>::ptr g_heartbeat_time = Config::Lookup<uint64_t>("g_heartbeat_time",5000,"raft_heartBeat_time");
 
@@ -33,18 +29,15 @@ Raft_Server::Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc g
         ,votedFor(-1)
         ,commitIndex(0)
         ,lastApplied(0)
+        ,persisentLog(0)
         ,state(State::Follower_State)
         ,voteCount(0)
         ,prepareCount(0)
         ,maxLogSize(maxlogsize)
         ,m_chan(chan)
         ,GetSnapshot(get)
-        ,ApplySnapshot(apply){
-        // ,dis_lock(new distri_lock()){
-        // ,zk_server(new star::ZKClient()){
-
-        // zk_server->init(g_zk_servers->getValue(),3000, 
-        //         std::bind(&Raft_Server::watcher,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3,std::placeholders::_4));
+        ,ApplySnapshot(apply)
+        ,lease_time(false){
 
         recover();
         if(log.size() == 0)
@@ -97,9 +90,7 @@ bool Raft_Server::start(){
         IOManager::GetThis()->addTimer(5000,[this](){
                 MutexType::Lock lock(p_mutex);
                 // STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "Time persisent run ,size is " << log.size() << ",[0]value " << log[0].value;
-                if(log.size() > 1)
-                        persisentlog();
-                else if(log.size() == 1 && log[0].value != "")
+                if(commitIndex-persisentLog > 0)
                         persisentlog();
         },true);
 
@@ -115,7 +106,10 @@ void Raft_Server::update(){
                          heartBeat = IOManager::GetThis()->addTimer(g_heartbeat_time->getValue(),[this](){
                                  //go [this] {
                                          //this->update();
-                                         this->boardcastHeartBeat();
+                                        if(GetLiveNode() > (int)servers.size()/2)
+                                                this->boardcastHeartBeat();
+                                        else
+                                                state = State::Follower_State;
                                  //};
                          },true);
                          return ;
@@ -148,6 +142,14 @@ void Raft_Server::update(){
                                  this->boardcastRequestVote();
                          //};
                  },true);
+                if(!lease){
+                        lease = IOManager::GetThis()->addTimer(g_heartbeat_time->getValue(),[this](){
+                                lease_time = false;
+                        });
+                }else{
+                        lease->refresh();
+                }
+                lease_time = true;
          }
         return ;
 }
@@ -343,7 +345,7 @@ AppendLogEntryReply Raft_Server::appendlog(AppendLogEntryArgs args) {
         if(args.term > currentTerm) {
                 state = State::Follower_State;
                 currentTerm = args.term;
-                votedFor = -1;
+                votedFor = args.leaderId;
                 update();
         }
 
@@ -395,7 +397,7 @@ RequestVoteReply Raft_Server::requestVote(RequestVoteArgs args){
         //m_mutex.lock();
         MutexType::Lock lock(m_mutex);
         RequestVoteReply reply;
-        if(args.term < currentTerm) {
+        if(args.term < currentTerm || lease_time) {
                 reply.term = currentTerm;
                 reply.voteGranted = false;
                 return reply;
@@ -598,9 +600,13 @@ int Raft_Server::getCommitIndex(){
 void Raft_Server::persisent() {
         //static MutexType p_mutex;
         //int fd=-1;
-        MutexType::Lock p_lock(p_mutex);
-        if((int)log.size() <= maxLogSize || lastApplied-log[0].index <= maxLogSize) {
-                return ;
+        {
+                MutexType::Lock p_lock(p_mutex);
+                // if((int)log.size() <= maxLogSize || lastApplied-log[0].index <= maxLogSize) {
+                //         return ;
+                // }
+                if(lastApplied - persisentLog < maxLogSize)
+                        return ;
         }
         // int baseIndex = log[0].index;
         // std::vector<LogEntry> data;
@@ -702,33 +708,31 @@ LogEntry Raft_Server::start(std::string logval){
         return entry;
 }
 
-// void Raft_Server::watcher(int type, int stat, const std::string& path, star::ZKClient::ptr client){
-//         if(on_watcher) {
-//                 on_watcher(type,stat,path,client);
-//         }
-//         return ;
-// }
 
 void Raft_Server::persisentlog(){
-        int baseIndex = log[0].index;
+        //int baseIndex = log[0].index;
         std::vector<LogEntry> data;
         // int lastTerm=0,lastIndex=0;
         {
                 MutexType::Lock lock(m_mutex);
-                LogEntry tmp = log.back();
-                if(log.size() != 1) {
-                        data = std::vector<LogEntry>(&log[0],&log[lastApplied-baseIndex]);
-                        log = std::vector<LogEntry>(&log[lastApplied-baseIndex],&log[log.size()]);
-                        //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << lastApplied << " " << baseIndex << " " << data.size();
-                        // lastTerm = log[lastApplied-baseIndex-1].term;
-                        // lastIndex = log[lastApplied-baseIndex-1].index;
-                        if(log.size() == 0)
-                                log.push_back(LogEntry{tmp.index+1,tmp.term,""});
-                }else if(log.size() == 1 && log[0].value != ""){
-                        data.push_back(tmp);
-                        log[0].index ++;
-                        log[0].value = "";
-                }
+
+                data = std::vector<LogEntry>(&log[persisentLog],&log[lastApplied]);
+                persisentLog = lastApplied;
+
+                // LogEntry tmp = log.back();
+                // if(log.size() != 1) {
+                //         data = std::vector<LogEntry>(&log[0],&log[lastApplied-baseIndex]);
+                //         log = std::vector<LogEntry>(&log[lastApplied-baseIndex],&log[log.size()]);
+                //         //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << lastApplied << " " << baseIndex << " " << data.size();
+                //         // lastTerm = log[lastApplied-baseIndex-1].term;
+                //         // lastIndex = log[lastApplied-baseIndex-1].index;
+                //         if(log.size() == 0)
+                //                 log.push_back(LogEntry{tmp.index+1,tmp.term,""});
+                // }else if(log.size() == 1 && log[0].value != ""){
+                //         data.push_back(tmp);
+                //         log[0].index ++;
+                //         log[0].value = "";
+                // }
         }
         std::string filename = "log-data-server["+std::to_string(id)+"]"+".log\0";
         int fd = open(filename.data(),O_WRONLY | O_APPEND | O_CREAT,0777);
@@ -747,6 +751,17 @@ void Raft_Server::persisentlog(){
                 memset(buf,0,sizeof(buf));
         }
         fsync(fd);
+}
+
+int Raft_Server::GetLiveNode(){
+        int ret = 0;
+        for(size_t i=0;i<servers.size();++i){
+                if(id == (int)i)
+                        ret++;
+                else if(servers[i]->isConnected())
+                        ret++;
+        }
+        return ret;
 }
 
 }

@@ -4,6 +4,8 @@
 
 namespace star::http {
 
+static star::Logger::ptr g_logger = STAR_LOG_NAME("http");
+
 int32_t FunctionServlet::handle(HttpRequest::ptr request, HttpResponse::ptr response, HttpSession::ptr session) {
     return m_cb(request, response, session);
 }
@@ -39,6 +41,7 @@ int32_t ServletDispatch::handle(HttpRequest::ptr request, HttpResponse::ptr resp
     if(slt) {
         slt->handle(request, response, session);
     }
+    // STAR_LOG_DEBUG(g_logger) << request->getPath() << " was visted!";
     return 0;
 }
 

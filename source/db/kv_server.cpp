@@ -3,9 +3,18 @@
 #include <functional>
 #include <cstdlib>
 
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+
 namespace star{
 
 static Logger::ptr g_logger = STAR_LOG_NAME("KV-Server");
+
+static ConfigVar<std::string>::ptr snapshot_file_name = Config::Lookup<std::string>("snapshot_file_name","./kv-snapshot","snapshot_file_name");
 
 kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlogsize)
     :m_chan(Channel<LogEntry>(capacity))
@@ -25,10 +34,12 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     // auto fun4 = std::function<std::vector<std::string>()>(std::bind(&kv_server::GetAllKey,this));
 
     auto fun5 = std::function<std::unordered_map<std::string,std::pair<std::string,uint64_t>>()>(std::bind(&kv_server::GetSnapshot,this));
-    auto fun6 = std::function<bool(std::unordered_map<std::string,std::pair<std::string,uint64_t>>)>(std::bind(&kv_server::ApplySnapshot,this,std::placeholders::_1));
+    auto fun6 = std::function<bool(std::unordered_map<std::string,std::pair<std::string,uint64_t>>)>(std::bind(&kv_server::ApplySnapshot,this,std::placeholders::_1,false));
     auto fun7 = std::function<std::vector<std::string>(std::vector<std::string> keys,std::vector<std::string> vals,uint64_t version)>(std::bind(&kv_server::TCC_Try,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3));
     auto fun8 = std::function<bool(std::vector<std::string> keys,uint64_t version)>(std::bind(&kv_server::TCC_Commit,this,std::placeholders::_1,std::placeholders::_2));
     auto fun9 = std::function<bool(std::vector<std::string> keys,std::vector<std::string> vals,uint64_t version)>(std::bind(&kv_server::TCC_Cancel,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3));
+
+    auto fun10 = std::function<bool()>(std::bind(&kv_server::clean,this));
 
     m_server->registerMethod("set",fun1);
     m_server->registerMethod("get",fun2);
@@ -40,6 +51,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     m_server->registerMethod("TCC_Try",fun7);
     m_server->registerMethod("TCC_Commit",fun8);
     m_server->registerMethod("TCC_Cancel",fun9);
+    m_server->registerMethod("clean",fun10);
 
     while(!m_server->bind(address)){
         sleep(1);
@@ -284,6 +296,46 @@ bool kv_server::applylog(std::string mode,std::string key,std::string value,uint
 kv_server::KVSnapshot kv_server::GetSnapshot(){
     if(r_server->getState() != Raft_Server::State::Leader_State)
         throw std::logic_error("Not Leader");
+    
+    // int fd[2]={0};
+    // if(pipe(fd) == -1) {
+    //     STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Pipe create error,can't create Snapshot!!!";
+    //     std::logic_error("create error");
+    // }
+    // pid_t pid = fork();
+    // if(pid == 0){
+    //     KVSnapshot shot;
+    //     for(auto q : m_values)
+    //         shot[q.first] = {std::get<0>(q.second),std::get<2>(q.second)};
+    //     star::rpc::Serializer s;
+    //     s << shot;
+    //     s.reset();
+    //     close(fd[0]);
+    //     int size = s.size();
+    //     ssize_t ret = write(fd[1],&size,4);
+    //     ret = write(fd[1],s.toString().c_str(),s.size());
+    //     (void)ret;
+    //     close(fd[1]);
+    //     exit(-1);
+    // }else{
+    //     close(fd[1]);
+    //     std::string tmp="";
+    //     int size = 0;
+    //     ssize_t n = read(fd[0],&size,4);
+    //     tmp.resize(size);
+    //     n = read(fd[0],tmp.data(),size);
+    //     (void)n;
+    //     star::rpc::Serializer s(tmp);
+    //     KVSnapshot shot;
+    //     s.reset();
+    //     s >> shot;
+    //     // while(waitpid(pid,nullptr,WNOHANG | WUNTRACED) == 0)
+    //     //     sleep(1);
+    //     wait(nullptr);
+    //     close(fd[0]);
+    //     return shot;
+    // }
+
     KVSnapshot shot;
     std::unordered_map<std::string,Value> tmp;
     {
@@ -297,15 +349,31 @@ kv_server::KVSnapshot kv_server::GetSnapshot(){
     return shot;
 }
 
-bool kv_server::ApplySnapshot(kv_server::KVSnapshot shot){
+bool kv_server::ApplySnapshot(kv_server::KVSnapshot shot,bool f){
     if(r_server->getState() != Raft_Server::State::Leader_State)
         throw std::logic_error("Not Leader");
-    MutexType::Lock lock(m_mutex);
-    for(auto q : shot) {
-        std::shared_ptr<MutexType> mutex;
-        auto it = m_values.find(q.first);
-        if(it == m_values.end() || std::get<2>(it->second) < q.second.second)
-            m_values[q.first] = Value{q.second.first , mutex, q.second.second};
+    {
+        MutexType::Lock lock(m_mutex);
+        for(auto q : shot) {
+            std::shared_ptr<MutexType> mutex(new MutexType());
+            auto it = m_values.find(q.first);
+            if(it == m_values.end() || std::get<2>(it->second) < q.second.second)
+                m_values[q.first] = Value{q.second.first , mutex, q.second.second};
+        }
+    }
+    bool flag = f;
+    while(!flag){
+        //int fd = open("./kv-snapshot-tmp",O_WRONLY | O_CREAT,0777);
+        int fd = open("./kv-snapshot-tmp",O_WRONLY | O_CREAT,0777);
+        star::rpc::Serializer s;
+        s << shot;
+        s.reset();
+        ssize_t ret = write(fd,s.toString().c_str(),s.size());
+        (void)ret;
+        fsync(fd);
+        char command[100]={0};
+        snprintf(command,sizeof(command),"ln -f ./kv-snapshot-tmp %s",snapshot_file_name->getValue().c_str());
+        flag = (system(command)==0?true:false);
     }
     return true;
 }
@@ -361,6 +429,9 @@ std::vector<std::string> kv_server::TCC_Try(std::vector<std::string> keys,std::v
     //     mutli_version[key] = Value{val,nullptr,version};
     // }
 
+    if(r_server->getState() != Raft_Server::State::Leader_State)
+        throw std::logic_error("Not Leader");
+
     std::vector<std::string> ret;
 
     std::string akey="",aval="";
@@ -391,6 +462,10 @@ bool kv_server::TCC_Commit(std::vector<std::string> keys,uint64_t version){
     //         m_values[key] = val;
     //     }
     // }
+
+    if(r_server->getState() != Raft_Server::State::Leader_State)
+        throw std::logic_error("Not Leader");
+
     std::string akey="";
     for(size_t i=0;i<keys.size();++i)
         akey += keys[i]+",";
@@ -415,6 +490,9 @@ bool kv_server::TCC_Cancel(std::vector<std::string> keys,std::vector<std::string
     //         std::get<0>(it->second) = val;
     // }
 
+    if(r_server->getState() != Raft_Server::State::Leader_State)
+        throw std::logic_error("Not Leader");
+
     std::string akey="",aval="";
     for(size_t i=0;i<keys.size();++i) {
         akey += keys[i]+",";
@@ -436,10 +514,11 @@ bool kv_server::Try(std::string akey,std::string aval,uint64_t version){
             MutexType::Lock lock(*((std::get<1>(it->second)).get()));
             if(m_states[key] == Key_State::LOCK)
                 return false;
+            m_states[key] = Key_State::LOCK;
         }else{
             MutexType::Lock lock(m_mutex);
+            m_states[key] = Key_State::LOCK;
         }
-        m_states[key] = Key_State::LOCK;
         mutli_version[key] = Value{val,nullptr,version};
     }
 
@@ -454,6 +533,7 @@ bool kv_server::Commit(std::string akey,uint64_t version){
         auto it = m_values.find(key);
         if(it != m_values.end()) {
             if(std::get<2>(m_values[key]) != std::get<2>(mutli_version[key])) {
+                MutexType::Lock lock(*((std::get<1>(it->second)).get()));
                 it->second = Value(std::get<0>(mutli_version[key]),std::get<1>(it->second),version);
             }
         }else{
@@ -474,8 +554,10 @@ bool kv_server::Cancel(std::string akey,std::string aval,uint64_t version){
     for(size_t i=0;i<keys.size();++i){
         auto key = keys[i],val = vals[i];
         auto it = m_values.find(key);
-        if(it != m_values.end() && std::get<2>(it->second) == version)
+        if(it != m_values.end() && std::get<2>(it->second) == version){
+            MutexType::Lock lock(*((std::get<1>(it->second)).get()));
             std::get<0>(it->second) = val;
+        }
     }
     for(auto key : keys)
         m_states[key] = Key_State::UNLOCK;
@@ -483,8 +565,6 @@ bool kv_server::Cancel(std::string akey,std::string aval,uint64_t version){
 }
 
 bool kv_server::appendlog(std::string key,std::string val,std::string mode,uint64_t version){
-    if(r_server->getState() != Raft_Server::State::Leader_State)
-        throw std::logic_error("Not Leader");
     std::shared_ptr<Channel<LogEntry>> chan(new Channel<LogEntry>(1));
 
     {
@@ -518,6 +598,48 @@ bool kv_server::appendlog(std::string key,std::string val,std::string mode,uint6
         return false; 
 }
 
+bool kv_server::clean(){
+    if(r_server->getState() != Raft_Server::State::Leader_State)
+        throw std::logic_error("Not Leader");
+    STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "clean was called!";
+    for(auto q : m_states){
+        MutexType::Lock lock(*((std::get<1>(m_values[q.first])).get()));
+        q.second = Key_State::UNLOCK;
+    }
+    return true;
+}
+
+void kv_server::recover_from_snapshot() {
+    int fd = open(snapshot_file_name->getValue().c_str(),O_WRONLY,0777);
+    if(fd == -1){
+        STAR_LOG_ERROR(g_logger) << "Snapshot was not find!";
+        return ;
+    }
+    int len = lseek(fd,0,SEEK_END);
+    char* addr = (char*)mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);
+    star::rpc::Serializer ser(addr,len);
+    kv_server::KVSnapshot shot;
+    ser.reset();
+    ser >> shot;
+    while(!ApplySnapshot(shot,true)) {}
+    return ;
+}
+
+bool kv_server::checkpoint() {
+    KVSnapshot shot;
+    std::unordered_map<std::string,Value> tmp;
+    //int commitIndex,lastapplied;
+    {
+        MutexType::Lock lock(m_mutex);
+        tmp = m_values;
+    }
+
+    for(auto q : tmp)
+        shot[q.first] = {std::get<0>(q.second),std::get<2>(q.second)};
+
+    return true;
+}
+
 std::vector<std::string> split(std::string str,std::string flag){
     std::vector<std::string> ret;
     size_t pos = 0;
@@ -529,5 +651,6 @@ std::vector<std::string> split(std::string str,std::string flag){
     }while(pos < str.size());
     return ret;
 }
+
 
 }

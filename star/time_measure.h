@@ -18,7 +18,7 @@ public:
     }
     ~TimeMeasure(){
         std::cout<< std::endl << " cost: " << sp(elapsed())<< " 毫秒"
-        << " micro: " << sp(elapsed_micro()) << " 微妙"
+        << " micro: " << sp(elapsed_micro()) << " 微秒"
         << " nano: "<< sp(elapsed_nano()) << " 纳秒"<< std::endl;
     }
     void reset() { m_begin = high_resolution_clock::now(); }

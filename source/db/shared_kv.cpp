@@ -50,7 +50,10 @@ int shared_kv::addserver(std::vector<std::string> ips){
     unsigned int hash = gethash(key);
     kv_client::ptr session(new kv_client());
     session->start(ips);
-    
+
+    while(!session->clean())
+        STAR_LOG_ERROR(STAR_LOG_ROOT()) << "session can not clean!";
+
     size_t pos = -1;
     {
         MutexType::Lock lock(m_mutex);

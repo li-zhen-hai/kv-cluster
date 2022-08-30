@@ -46,6 +46,12 @@ public:
     bool TCC_Commit(std::vector<std::string> keys,uint64_t version);
     bool TCC_Cancel(std::vector<std::string> keys,std::vector<std::string> vals,uint64_t version);
 
+    bool clean();
+
+    bool checkpoint();
+
+    void recover_from_snapshot();
+
     //uint64_t GetMaxVersion();
 
 private:
@@ -56,7 +62,7 @@ private:
 
     KVSnapshot GetSnapshot();
 
-    bool ApplySnapshot(KVSnapshot shot);
+    bool ApplySnapshot(KVSnapshot shot,bool f = false);
 
     bool Try(std::string akey,std::string aval,uint64_t version);
     bool Commit(std::string akey,uint64_t version);

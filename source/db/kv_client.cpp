@@ -130,59 +130,59 @@ std::string kv_client::get(const std::string& key){
     return "";
 }
 
-std::vector<std::string> kv_client::GetAllKey(){
-    if(isclose)
-        throw "server close";
-    calls++;
-    std::shared_ptr<int> flag(nullptr,[this](int*){
-        (this->calls)--;
-    });
-    //std::vector<std::string> ret;
-    for(size_t i=0;i<m_servers.size();++i){
-        if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-                }else{
-                    continue;
-                }
-        }
-        auto res = m_servers[i]->call<std::vector<std::string>>("GetAllKey");
-        if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
-            if(res.getVal().size() == 0)
-                continue;
-            return res.getVal();
-        }
-    }
-    return {};
-}
+// std::vector<std::string> kv_client::GetAllKey(){
+//     if(isclose)
+//         throw "server close";
+//     calls++;
+//     std::shared_ptr<int> flag(nullptr,[this](int*){
+//         (this->calls)--;
+//     });
+//     //std::vector<std::string> ret;
+//     for(size_t i=0;i<m_servers.size();++i){
+//         if(!m_servers[i]->isConnected()){
+//             star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+//             if(new_client->connect(addrs[i])){
+//                     m_servers[i]=new_client;
+//                 }else{
+//                     continue;
+//                 }
+//         }
+//         auto res = m_servers[i]->call<std::vector<std::string>>("GetAllKey");
+//         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
+//             if(res.getVal().size() == 0)
+//                 continue;
+//             return res.getVal();
+//         }
+//     }
+//     return {};
+// }
 
-Data kv_client::erase(std::string key){
-    if(isclose)
-        throw "server close";
-    calls++;
-    std::shared_ptr<int> flag(nullptr,[this](int*){
-        (this->calls)--;
-    });
-    //std::vector<std::string> ret;
-    for(size_t i=0;i<m_servers.size();++i){
-        if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-                }else{
-                    continue;
-                }
-        }
-        auto res = m_servers[i]->call<Data>("erase");
-        if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
-            if(res.getVal().key == "" && res.getVal().value =="")
-                continue;
-            return res.getVal();
-        }
-    }
-    return {};
-}
+// Data kv_client::erase(std::string key){
+//     if(isclose)
+//         throw "server close";
+//     calls++;
+//     std::shared_ptr<int> flag(nullptr,[this](int*){
+//         (this->calls)--;
+//     });
+//     //std::vector<std::string> ret;
+//     for(size_t i=0;i<m_servers.size();++i){
+//         if(!m_servers[i]->isConnected()){
+//             star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+//             if(new_client->connect(addrs[i])){
+//                     m_servers[i]=new_client;
+//                 }else{
+//                     continue;
+//                 }
+//         }
+//         auto res = m_servers[i]->call<Data>("erase");
+//         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
+//             if(res.getVal().key == "" && res.getVal().value =="")
+//                 continue;
+//             return res.getVal();
+//         }
+//     }
+//     return {};
+// }
 
 std::unordered_map<std::string,std::pair<std::string,uint64_t>> kv_client::GetSnapshot(){
     if(isclose)
@@ -290,7 +290,7 @@ bool kv_client::TCC_Commit(std::vector<std::string> keys,uint64_t version){
 }
 
 bool kv_client::TCC_Cancel(std::vector<std::string> keys,std::vector<std::string> vals,uint64_t version){
-        if(isclose)
+    if(isclose)
         throw std::logic_error("server close!");
     calls++;
     std::shared_ptr<int> flag(nullptr,[this](int*){
@@ -310,6 +310,35 @@ bool kv_client::TCC_Cancel(std::vector<std::string> keys,std::vector<std::string
             throw std::logic_error("Raft-Server Error!");
         }
         auto res = m_servers[i]->call<bool>("TCC_Cancel",keys,vals,version);
+        if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
+            return res.getVal();
+        }
+    }
+    return false;
+}
+
+bool kv_client::clean(){
+    if(isclose)
+        throw std::logic_error("server close!");
+    calls++;
+    std::shared_ptr<int> flag(nullptr,[this](int*){
+        (this->calls)--;
+    });
+    for(size_t i=0;i<m_servers.size() && !isclose;++i){
+        if(!m_servers[i]->isConnected()){
+            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+            if(new_client->connect(addrs[i])){
+                    m_servers[i]=new_client;
+            }else{
+                continue;
+            }
+        }
+        if(!still_alive()){
+            STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
+            throw std::logic_error("Raft-Server Error!");
+        }
+        auto res = m_servers[i]->call<bool>("clean");
+        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << i << "server " << res.getCode();
         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
             return res.getVal();
         }

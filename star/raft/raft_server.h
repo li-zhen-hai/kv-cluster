@@ -98,6 +98,8 @@ private:
 
     void persisentlog();
 
+    int GetLiveNode();
+
 private:
 
     Timer::ptr heartBeat;
@@ -119,6 +121,7 @@ private:
 
     int commitIndex;
     int lastApplied;
+    int persisentLog;
 
     std::vector<int> nextIndex;
     std::vector<int> matchIndex;
@@ -131,12 +134,7 @@ private:
 
     bool recive_heartbeat = false;
 
-    // std::map<std::string,std::string> m_values;
-
-
     int maxLogSize;
-
-    // distri_lock::ptr dis_lock;
 
     CoCondVar m_con;
 
@@ -144,6 +142,9 @@ private:
 
     GetSnapshotFunc GetSnapshot;
     ApplySnapshotFunc ApplySnapshot;
+
+    Timer::ptr lease;
+    bool lease_time;
 };
 
 
