@@ -5,14 +5,15 @@ static star::Logger::ptr g_logger = STAR_LOG_ROOT();
 
 int main(){
     //STAR_LOG_DEBUG(g_logger) << STAR_LOG_NAME("system").get()->getLevel();
-    //STAR_LOG_NAME("system").get()->setLevel(star::LogLevel::FATAL);
+    STAR_LOG_NAME("system").get()->setLevel(star::LogLevel::FATAL);
+    g_logger->setLevel(star::LogLevel::FATAL);
     //star::Config::LoadFromFile("../config/log.yaml");
     star::IOManager::ptr ioManager(new star::IOManager{8});
     ioManager->submit([]{
         star::Address::ptr address = star::Address::LookupAny("0.0.0.0:12345");
         star::http::HttpServer::ptr server(new star::http::HttpServer(true));
         server->getServletDispatch()->addGlobServlet("/*",
-                     std::make_shared<star::http::FileServlet>("/mnt/c/Users/zavier/Desktop/star/static"));
+                     std::make_shared<star::http::FileServlet>("/"));
         server->getServletDispatch()->addServlet("/a",[](star::http::HttpRequest::ptr request
                 , star::http::HttpResponse::ptr response
                 , star::http::HttpSession::ptr session) ->uint32_t {
