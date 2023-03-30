@@ -1,1 +1,0 @@
-/usr/bin/g++  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g CMakeFiles/test_rpc_server.dir/rpc/test_rpc_server.cpp.o -o /home/star/kv-cluster/bin/test/test_rpc_server   -L/home/star/kv-cluster/lib  -Wl,-rpath,/home/star/kv-cluster/lib /home/star/kv-cluster/lib/libstar.a -lpthread -lyaml-cpp -levent -ldl -lleveldb -lsnappy 
