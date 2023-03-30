@@ -1,0 +1,6 @@
+reg_heartbeat_timeout: 20000
+ser_heartbeat_timeout: 15000
+con_heartbeat_timeout: 15000
+ser_client_alivetime: 10000
+client_hearbeat_timeout: 5000
+re_discover_service: true

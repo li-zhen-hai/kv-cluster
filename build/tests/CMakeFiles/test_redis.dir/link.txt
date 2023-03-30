@@ -1,0 +1,1 @@
+/usr/bin/g++  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function CMakeFiles/test_redis.dir/db/test_redis.cpp.o -o ../../bin/test/test_redis   -L/home/star/kv-cluster/lib  -Wl,-rpath,/home/star/kv-cluster/lib ../../lib/libstar.a -lpthread -lyaml-cpp -levent -ldl 

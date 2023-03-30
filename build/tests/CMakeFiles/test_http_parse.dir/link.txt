@@ -1,0 +1,1 @@
+/usr/bin/g++  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g CMakeFiles/test_http_parse.dir/test_http_parse.cpp.o -o /home/star/kv-cluster/bin/test/test_http_parse   -L/home/star/kv-cluster/lib  -Wl,-rpath,/home/star/kv-cluster/lib /home/star/kv-cluster/lib/libstar.a -lpthread -lyaml-cpp -levent -ldl -lleveldb -lsnappy 

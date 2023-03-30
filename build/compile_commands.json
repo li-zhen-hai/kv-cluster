@@ -1,0 +1,427 @@
+[
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/byte_array.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/byte_array.cpp.o -c /home/star/kv-cluster/source/byte_array.cpp",
+  "file": "/home/star/kv-cluster/source/byte_array.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/config.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/config.cpp.o -c /home/star/kv-cluster/source/config.cpp",
+  "file": "/home/star/kv-cluster/source/config.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/fd_manager.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/fd_manager.cpp.o -c /home/star/kv-cluster/source/fd_manager.cpp",
+  "file": "/home/star/kv-cluster/source/fd_manager.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/fiber.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/fiber.cpp.o -c /home/star/kv-cluster/source/fiber.cpp",
+  "file": "/home/star/kv-cluster/source/fiber.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/file_monitor.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/file_monitor.cpp.o -c /home/star/kv-cluster/source/file_monitor.cpp",
+  "file": "/home/star/kv-cluster/source/file_monitor.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/http/http.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/http/http.cpp.o -c /home/star/kv-cluster/source/http/http.cpp",
+  "file": "/home/star/kv-cluster/source/http/http.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/http/http_connection.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/http/http_connection.cpp.o -c /home/star/kv-cluster/source/http/http_connection.cpp",
+  "file": "/home/star/kv-cluster/source/http/http_connection.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/http/http_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/http/http_server.cpp.o -c /home/star/kv-cluster/source/http/http_server.cpp",
+  "file": "/home/star/kv-cluster/source/http/http_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/http/http_session.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/http/http_session.cpp.o -c /home/star/kv-cluster/source/http/http_session.cpp",
+  "file": "/home/star/kv-cluster/source/http/http_session.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/http/parse.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/http/parse.cpp.o -c /home/star/kv-cluster/source/http/parse.cpp",
+  "file": "/home/star/kv-cluster/source/http/parse.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/http/servlet.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/http/servlet.cpp.o -c /home/star/kv-cluster/source/http/servlet.cpp",
+  "file": "/home/star/kv-cluster/source/http/servlet.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/http/servlets/file_servlet.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/http/servlets/file_servlet.cpp.o -c /home/star/kv-cluster/source/http/servlets/file_servlet.cpp",
+  "file": "/home/star/kv-cluster/source/http/servlets/file_servlet.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/hook.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/hook.cpp.o -c /home/star/kv-cluster/source/hook.cpp",
+  "file": "/home/star/kv-cluster/source/hook.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/io_manager.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/io_manager.cpp.o -c /home/star/kv-cluster/source/io_manager.cpp",
+  "file": "/home/star/kv-cluster/source/io_manager.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/lexical_cast.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/lexical_cast.cpp.o -c /home/star/kv-cluster/source/lexical_cast.cpp",
+  "file": "/home/star/kv-cluster/source/lexical_cast.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/log.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/log.cpp.o -c /home/star/kv-cluster/source/log.cpp",
+  "file": "/home/star/kv-cluster/source/log.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/net/address.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/net/address.cpp.o -c /home/star/kv-cluster/source/net/address.cpp",
+  "file": "/home/star/kv-cluster/source/net/address.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/net/socket.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/net/socket.cpp.o -c /home/star/kv-cluster/source/net/socket.cpp",
+  "file": "/home/star/kv-cluster/source/net/socket.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/net/socket_stream.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/net/socket_stream.cpp.o -c /home/star/kv-cluster/source/net/socket_stream.cpp",
+  "file": "/home/star/kv-cluster/source/net/socket_stream.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/net/tcp_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/net/tcp_server.cpp.o -c /home/star/kv-cluster/source/net/tcp_server.cpp",
+  "file": "/home/star/kv-cluster/source/net/tcp_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/net/uri.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/net/uri.cpp.o -c /home/star/kv-cluster/source/net/uri.cpp",
+  "file": "/home/star/kv-cluster/source/net/uri.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/rpc/rpc_client.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/rpc/rpc_client.cpp.o -c /home/star/kv-cluster/source/rpc/rpc_client.cpp",
+  "file": "/home/star/kv-cluster/source/rpc/rpc_client.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/rpc/rpc_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/rpc/rpc_server.cpp.o -c /home/star/kv-cluster/source/rpc/rpc_server.cpp",
+  "file": "/home/star/kv-cluster/source/rpc/rpc_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/rpc/rpc_service_register.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/rpc/rpc_service_register.cpp.o -c /home/star/kv-cluster/source/rpc/rpc_service_register.cpp",
+  "file": "/home/star/kv-cluster/source/rpc/rpc_service_register.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/rpc/rpc_connection_pool.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/rpc/rpc_connection_pool.cpp.o -c /home/star/kv-cluster/source/rpc/rpc_connection_pool.cpp",
+  "file": "/home/star/kv-cluster/source/rpc/rpc_connection_pool.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/rpc/rpc_session.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/rpc/rpc_session.cpp.o -c /home/star/kv-cluster/source/rpc/rpc_session.cpp",
+  "file": "/home/star/kv-cluster/source/rpc/rpc_session.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/raft/raft_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/raft/raft_server.cpp.o -c /home/star/kv-cluster/source/raft/raft_server.cpp",
+  "file": "/home/star/kv-cluster/source/raft/raft_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/raft/raft_client.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/raft/raft_client.cpp.o -c /home/star/kv-cluster/source/raft/raft_client.cpp",
+  "file": "/home/star/kv-cluster/source/raft/raft_client.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/db/kv_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/db/kv_server.cpp.o -c /home/star/kv-cluster/source/db/kv_server.cpp",
+  "file": "/home/star/kv-cluster/source/db/kv_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/db/shared_kv.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/db/shared_kv.cpp.o -c /home/star/kv-cluster/source/db/shared_kv.cpp",
+  "file": "/home/star/kv-cluster/source/db/shared_kv.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/db/kv_client.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/db/kv_client.cpp.o -c /home/star/kv-cluster/source/db/kv_client.cpp",
+  "file": "/home/star/kv-cluster/source/db/kv_client.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/sync/mutex.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/sync/mutex.cpp.o -c /home/star/kv-cluster/source/sync/mutex.cpp",
+  "file": "/home/star/kv-cluster/source/sync/mutex.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/sync/co_condvar.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/sync/co_condvar.cpp.o -c /home/star/kv-cluster/source/sync/co_condvar.cpp",
+  "file": "/home/star/kv-cluster/source/sync/co_condvar.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/sync/distri_lock.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/sync/distri_lock.cpp.o -c /home/star/kv-cluster/source/sync/distri_lock.cpp",
+  "file": "/home/star/kv-cluster/source/sync/distri_lock.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/scheduler.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/scheduler.cpp.o -c /home/star/kv-cluster/source/scheduler.cpp",
+  "file": "/home/star/kv-cluster/source/scheduler.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/stream.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/stream.cpp.o -c /home/star/kv-cluster/source/stream.cpp",
+  "file": "/home/star/kv-cluster/source/stream.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/timer.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/timer.cpp.o -c /home/star/kv-cluster/source/timer.cpp",
+  "file": "/home/star/kv-cluster/source/timer.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/thread.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/thread.cpp.o -c /home/star/kv-cluster/source/thread.cpp",
+  "file": "/home/star/kv-cluster/source/thread.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/source",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"source/util.cpp\\\" -I/home/star/kv-cluster  -rdynamic  -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -DCMAKE_BUILD_TYPE=Debug -g   -Wno-builtin-macro-redefined -o CMakeFiles/star.dir/util.cpp.o -c /home/star/kv-cluster/source/util.cpp",
+  "file": "/home/star/kv-cluster/source/util.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_address.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_address.dir/test_address.cpp.o -c /home/star/kv-cluster/tests/test_address.cpp",
+  "file": "/home/star/kv-cluster/tests/test_address.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_bytearray.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_bytearray.dir/test_bytearray.cpp.o -c /home/star/kv-cluster/tests/test_bytearray.cpp",
+  "file": "/home/star/kv-cluster/tests/test_bytearray.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_config.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_config.dir/test_config.cpp.o -c /home/star/kv-cluster/tests/test_config.cpp",
+  "file": "/home/star/kv-cluster/tests/test_config.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_fiber.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_fiber.dir/test_fiber.cpp.o -c /home/star/kv-cluster/tests/test_fiber.cpp",
+  "file": "/home/star/kv-cluster/tests/test_fiber.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_fiber_exit.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_fiber_exit.dir/test_fiber_exit.cpp.o -c /home/star/kv-cluster/tests/test_fiber_exit.cpp",
+  "file": "/home/star/kv-cluster/tests/test_fiber_exit.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_file_monitor.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_file_monitor.dir/test_file_monitor.cpp.o -c /home/star/kv-cluster/tests/test_file_monitor.cpp",
+  "file": "/home/star/kv-cluster/tests/test_file_monitor.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_go.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_go.dir/test_go.cpp.o -c /home/star/kv-cluster/tests/test_go.cpp",
+  "file": "/home/star/kv-cluster/tests/test_go.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_hook.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_hook.dir/test_hook.cpp.o -c /home/star/kv-cluster/tests/test_hook.cpp",
+  "file": "/home/star/kv-cluster/tests/test_hook.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_http.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_http.dir/test_http.cpp.o -c /home/star/kv-cluster/tests/test_http.cpp",
+  "file": "/home/star/kv-cluster/tests/test_http.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_http_connection.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_http_connection.dir/test_http_connection.cpp.o -c /home/star/kv-cluster/tests/test_http_connection.cpp",
+  "file": "/home/star/kv-cluster/tests/test_http_connection.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_http_parse.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_http_parse.dir/test_http_parse.cpp.o -c /home/star/kv-cluster/tests/test_http_parse.cpp",
+  "file": "/home/star/kv-cluster/tests/test_http_parse.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_http_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_http_server.dir/test_http_server.cpp.o -c /home/star/kv-cluster/tests/test_http_server.cpp",
+  "file": "/home/star/kv-cluster/tests/test_http_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_iomanager.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o -c /home/star/kv-cluster/tests/test_iomanager.cpp",
+  "file": "/home/star/kv-cluster/tests/test_iomanager.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_log.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_log.dir/test_log.cpp.o -c /home/star/kv-cluster/tests/test_log.cpp",
+  "file": "/home/star/kv-cluster/tests/test_log.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_log_yaml.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_log_yaml.dir/test_log_yaml.cpp.o -c /home/star/kv-cluster/tests/test_log_yaml.cpp",
+  "file": "/home/star/kv-cluster/tests/test_log_yaml.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_pipe.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_pipe.dir/test_pipe.cpp.o -c /home/star/kv-cluster/tests/test_pipe.cpp",
+  "file": "/home/star/kv-cluster/tests/test_pipe.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_scheduler.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o -c /home/star/kv-cluster/tests/test_scheduler.cpp",
+  "file": "/home/star/kv-cluster/tests/test_scheduler.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_skip_list.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_skip_list.dir/test_skip_list.cpp.o -c /home/star/kv-cluster/tests/test_skip_list.cpp",
+  "file": "/home/star/kv-cluster/tests/test_skip_list.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_socket.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_socket.dir/test_socket.cpp.o -c /home/star/kv-cluster/tests/test_socket.cpp",
+  "file": "/home/star/kv-cluster/tests/test_socket.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_sync.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_sync.dir/test_sync.cpp.o -c /home/star/kv-cluster/tests/test_sync.cpp",
+  "file": "/home/star/kv-cluster/tests/test_sync.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_tcp_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_tcp_server.dir/test_tcp_server.cpp.o -c /home/star/kv-cluster/tests/test_tcp_server.cpp",
+  "file": "/home/star/kv-cluster/tests/test_tcp_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_thread.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_thread.dir/test_thread.cpp.o -c /home/star/kv-cluster/tests/test_thread.cpp",
+  "file": "/home/star/kv-cluster/tests/test_thread.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_timer.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_timer.dir/test_timer.cpp.o -c /home/star/kv-cluster/tests/test_timer.cpp",
+  "file": "/home/star/kv-cluster/tests/test_timer.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_timerfd.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_timerfd.dir/test_timerfd.cpp.o -c /home/star/kv-cluster/tests/test_timerfd.cpp",
+  "file": "/home/star/kv-cluster/tests/test_timerfd.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_uri.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_uri.dir/test_uri.cpp.o -c /home/star/kv-cluster/tests/test_uri.cpp",
+  "file": "/home/star/kv-cluster/tests/test_uri.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/test_util.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_util.dir/test_util.cpp.o -c /home/star/kv-cluster/tests/test_util.cpp",
+  "file": "/home/star/kv-cluster/tests/test_util.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/rpc/test_http_rpc_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_http_rpc_server.dir/rpc/test_http_rpc_server.cpp.o -c /home/star/kv-cluster/tests/rpc/test_http_rpc_server.cpp",
+  "file": "/home/star/kv-cluster/tests/rpc/test_http_rpc_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/rpc/test_route_strategy.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_route_strategy.dir/rpc/test_route_strategy.cpp.o -c /home/star/kv-cluster/tests/rpc/test_route_strategy.cpp",
+  "file": "/home/star/kv-cluster/tests/rpc/test_route_strategy.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/rpc/test_rpc_client.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_rpc_client.dir/rpc/test_rpc_client.cpp.o -c /home/star/kv-cluster/tests/rpc/test_rpc_client.cpp",
+  "file": "/home/star/kv-cluster/tests/rpc/test_rpc_client.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/rpc/test_rpc_connection_poll.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_rpc_connection_poll.dir/rpc/test_rpc_connection_poll.cpp.o -c /home/star/kv-cluster/tests/rpc/test_rpc_connection_poll.cpp",
+  "file": "/home/star/kv-cluster/tests/rpc/test_rpc_connection_poll.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/rpc/test_rpc_registry.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_rpc_registry.dir/rpc/test_rpc_registry.cpp.o -c /home/star/kv-cluster/tests/rpc/test_rpc_registry.cpp",
+  "file": "/home/star/kv-cluster/tests/rpc/test_rpc_registry.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/rpc/test_rpc_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_rpc_server.dir/rpc/test_rpc_server.cpp.o -c /home/star/kv-cluster/tests/rpc/test_rpc_server.cpp",
+  "file": "/home/star/kv-cluster/tests/rpc/test_rpc_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/rpc/test_serializer.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_serializer.dir/rpc/test_serializer.cpp.o -c /home/star/kv-cluster/tests/rpc/test_serializer.cpp",
+  "file": "/home/star/kv-cluster/tests/rpc/test_serializer.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/raft/test_kv_snapshot.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_kv_snapshot.dir/raft/test_kv_snapshot.cpp.o -c /home/star/kv-cluster/tests/raft/test_kv_snapshot.cpp",
+  "file": "/home/star/kv-cluster/tests/raft/test_kv_snapshot.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/raft/test_raft_client.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_raft_client.dir/raft/test_raft_client.cpp.o -c /home/star/kv-cluster/tests/raft/test_raft_client.cpp",
+  "file": "/home/star/kv-cluster/tests/raft/test_raft_client.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/raft/test_raft_serializer.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_raft_serializer.dir/raft/test_raft_serializer.cpp.o -c /home/star/kv-cluster/tests/raft/test_raft_serializer.cpp",
+  "file": "/home/star/kv-cluster/tests/raft/test_raft_serializer.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/raft/test_raft_server.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_raft_server.dir/raft/test_raft_server.cpp.o -c /home/star/kv-cluster/tests/raft/test_raft_server.cpp",
+  "file": "/home/star/kv-cluster/tests/raft/test_raft_server.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/raft/test_snapshot_rpc.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_snapshot_rpc.dir/raft/test_snapshot_rpc.cpp.o -c /home/star/kv-cluster/tests/raft/test_snapshot_rpc.cpp",
+  "file": "/home/star/kv-cluster/tests/raft/test_snapshot_rpc.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/db/test_leveldb_demo.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_leveldb_demo.dir/db/test_leveldb_demo.cpp.o -c /home/star/kv-cluster/tests/db/test_leveldb_demo.cpp",
+  "file": "/home/star/kv-cluster/tests/db/test_leveldb_demo.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/db/test_leveldb_seq_write.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_leveldb_seq_write.dir/db/test_leveldb_seq_write.cpp.o -c /home/star/kv-cluster/tests/db/test_leveldb_seq_write.cpp",
+  "file": "/home/star/kv-cluster/tests/db/test_leveldb_seq_write.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/db/test_shared_kv.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_shared_kv.dir/db/test_shared_kv.cpp.o -c /home/star/kv-cluster/tests/db/test_shared_kv.cpp",
+  "file": "/home/star/kv-cluster/tests/db/test_shared_kv.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/db/test_shared_kv_client.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_shared_kv_client.dir/db/test_shared_kv_client.cpp.o -c /home/star/kv-cluster/tests/db/test_shared_kv_client.cpp",
+  "file": "/home/star/kv-cluster/tests/db/test_shared_kv_client.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/tests",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"tests/db/test_shared_kv_read_client.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/test_shared_kv_read_client.dir/db/test_shared_kv_read_client.cpp.o -c /home/star/kv-cluster/tests/db/test_shared_kv_read_client.cpp",
+  "file": "/home/star/kv-cluster/tests/db/test_shared_kv_read_client.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/raft_cluster",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"raft_cluster/raft_server_1.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/raft_server_1.dir/raft_server_1.cpp.o -c /home/star/kv-cluster/raft_cluster/raft_server_1.cpp",
+  "file": "/home/star/kv-cluster/raft_cluster/raft_server_1.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/raft_cluster",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"raft_cluster/raft_server_2.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/raft_server_2.dir/raft_server_2.cpp.o -c /home/star/kv-cluster/raft_cluster/raft_server_2.cpp",
+  "file": "/home/star/kv-cluster/raft_cluster/raft_server_2.cpp"
+},
+{
+  "directory": "/home/star/kv-cluster/build/raft_cluster",
+  "command": "/usr/bin/g++  -D__FILE__=\\\"raft_cluster/raft_server_3.cpp\\\" -I/home/star/kv-cluster  -rdynamic -std=c++20 -ggdb -Wall -Wno-deprecated -Wno-unused-function -g   -Wno-builtin-macro-redefined -o CMakeFiles/raft_server_3.dir/raft_server_3.cpp.o -c /home/star/kv-cluster/raft_cluster/raft_server_3.cpp",
+  "file": "/home/star/kv-cluster/raft_cluster/raft_server_3.cpp"
+}
+]
