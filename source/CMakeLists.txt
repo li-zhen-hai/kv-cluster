@@ -61,7 +61,7 @@ set(CMAKE_PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../star/proto/)
 
 # protobufmaker(test.proto LIB_SRC ${CMAKE_PROTO_DIR})
 
-set(LIB_LIB pthread yaml-cpp event dl leveldb snappy)
+set(LIB_LIB yaml-cpp dl leveldb snappy pthread)
 
 add_library(star STATIC ${LIB_SRC})
 target_link_libraries(star ${LIB_LIB})
