@@ -688,7 +688,8 @@ int Raft_Server::getCommitIndex(){
 void Raft_Server::persisent() {
         //static MutexType p_mutex;
         //int fd=-1;
-        int lindex = lastApplied;
+
+        //int lindex = lastApplied;
 
         /*
         STAR_LOG_DEBUG(STAR_LOG_ROOT()) <<"persisent run, "<< persisentLog 
@@ -838,7 +839,7 @@ void Raft_Server::recover(){
         }
         if(log.size()==0)
                 return ;
-        for(int i=0;i<log.size();++i){
+        for(int i=0;i<(int)log.size();++i){
                 m_chan << log[i];
         }
         //lastApplied = commitindex;
