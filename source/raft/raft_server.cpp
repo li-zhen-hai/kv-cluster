@@ -47,7 +47,7 @@ Raft_Server::Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc g
         ,persisentLog(0)
         ,state(State::Follower_State)
         ,voteCount(0)
-        ,prepareCount(0)
+        ,prepareCount(1)
         ,winPreVote(false)
         ,maxLogSize(maxlogsize)
         ,m_chan(chan)
