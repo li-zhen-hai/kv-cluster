@@ -116,6 +116,7 @@ bool shared_kv::set(std::string key,std::string value,bool flag){
     if(session == nullptr)
         return false;
     uint64_t version = idx++;
+    STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "key : " << key<< ", value : " << value;
     if(flag){
         session->set_until_success(key,value,version);
         return true;

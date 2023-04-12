@@ -101,7 +101,7 @@ void kv_server::start(){
             // if(mode == "Del")
             //     value =std::get<0>(m_values[key]);
             //uint64_t s_id = (uint64_t)atoll(id.c_str());
-
+            //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << l.id << "," << l.key <<"," << l.value;
             uint64_t s_id = l.id;
             {
                 std::unordered_map<uint64_t,std::shared_ptr<Channel<LogEntry>>>::iterator it2;
@@ -219,7 +219,7 @@ bool kv_server::set(std::string key,std::string value,uint64_t version){
     //     return true;
     // else    
     //     return false; 
-
+    //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << key <<" " << value ;
     return appendlog(key,value,"Set",version);
 
 }
@@ -649,6 +649,7 @@ bool kv_server::appendlog(std::string key,std::string val,std::string mode,uint6
         MutexType::Lock lock(m_mutex);
         channels.insert({id,chan});
     }
+    //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << key << " : " << val;
     LogEntry entry = r_server->start(DB_log{id,key,val});
     LogEntry tmp;
     bool isrun = true;

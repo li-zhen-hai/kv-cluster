@@ -599,14 +599,14 @@ public:
         return *this;
     }
 
-    Serializer& operator >> (DB_log& i){
+    Serializer& operator >> (struct DB_log& i){
             (*this) >> i.id;
             (*this) >> i.key;
             (*this) >> i.value;
             return *this;
     }
 
-    Serializer& operator << (DB_log& i){
+    Serializer& operator << (const struct DB_log& i){
             (*this) << i.id;
             (*this) << i.key;
             (*this) << i.value;

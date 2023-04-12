@@ -611,6 +611,7 @@ void Raft_Server::applyLog() {
         //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << lastApplied <<"," << commitIndex <<","<<baseIndex;
         for(int i=lastapplied-baseIndex+1;i<=commitindex-baseIndex && i < (int)log.size();++i){
                 m_chan << log[i];
+                //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << log[i].index << "," << log[i].value;
                 if(is_async_log)
                         async_persisent_log_chan << log[i];
         }
@@ -854,6 +855,7 @@ void Raft_Server::recover(){
 LogEntry Raft_Server::start(DB_log i){
         LogEntry entry;
         {
+                //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "<Raft_server::start> report : " << i.id <<","<<i.key<<","<<i.value;
                 MutexType::Lock lock(m_mutex);
                 if(state != State::Leader_State)
                         return {};
@@ -861,7 +863,11 @@ LogEntry Raft_Server::start(DB_log i){
                 entry.term = currentTerm;
                 rpc::Serializer s;
                 s<<i;
+                s.reset();
                 entry.value = s.toString();
+
+                //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << s.toString();
+
                 log.push_back(entry);
         }
         // go [this] {
