@@ -38,8 +38,8 @@ int main(){
         server->getServletDispatch()->addServlet("/getAllkv",[](star::http::HttpRequest::ptr request
                 , star::http::HttpResponse::ptr response
                 , star::http::HttpSession::ptr session) ->uint32_t {
-            std::string s= "<!DOCTYPE html>\n<html lang=\"en\"\n<head>\n\t<meta charset= \"utf-8\">\n\t<title>kv<title>\n\t<style>\n\t\ttable{\n\t\t\tborder: 1px solid black;\n\t\t\tmargin:auto\n\t\t\twidth:500px;\n\t\t}\n\t\tth{\n\t\t\tborder:1px solid black;\n\t\t\theight:30px;\n\t\t}";
-            s += "\n\t\ttd{\n\t\t\tborder: 1px solid black;\n\t\t\theight:20px;\n\t\t\ttext-align:center;\n\t\tdiv{\n\t\t\ttext-align:center\n\t\t\tmargin:50px\n\t\t}";
+            std::string s= "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<meta charset= \"utf-8\">\n\t<title>kv</title>\n\t<style>\n\t\ttable{\n\t\t\tborder: 1px solid black;\n\t\t\tmargin:auto;\n\t\t\twidth:500px;\n\t\t}\n\t\tth{\n\t\t\tborder:1px solid black;\n\t\t\theight:30px;\n\t\t}";
+            s += "\n\t\ttd{\n\t\t\tborder: 1px solid black;\n\t\t\theight:20px;\n\t\t\ttext-align:center;\n\t\t}\n\t\tdiv{\n\t\t\ttext-align:center;\n\t\t\tmargin:50px;\n\t\t}";
             s += "\n\t</style>\n</head>\n<body>\n<table align=\"left\">\n\t<tr>\n\t\t<th>key</th>\n\t\t<th>value</th>\n\t</tr>";
             star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
             star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
