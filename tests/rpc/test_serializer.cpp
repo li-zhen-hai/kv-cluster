@@ -4,6 +4,8 @@
 #include "star/rpc/rpc.h"
 #include "star/log.h"
 #include "star/config.h"
+#include "star/raft/common.h"
+
 #include <iostream>
 static star::Logger::ptr g_logger = STAR_LOG_ROOT();
 void test1() {
@@ -110,6 +112,21 @@ void map2map() {
 
 }
 
+void test10(){
+    LogEntry log;
+    star::rpc::Serializer s;
+    for(int i=0;i<100;++i){
+        log = LogEntry(i,i,std::to_string(i));
+        s << log;
+        s.reset();
+        std::cout << s.size() <<" : "<<s.toString() << std::endl;
+        s >> log;
+        std::cout << log.index <<" " <<log.term<< " " << log.value << std::endl;
+    }
+
+    return ;
+}
+
 int main() {
-    test6();
+    test10();
 }
