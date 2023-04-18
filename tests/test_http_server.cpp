@@ -9,7 +9,7 @@ static star::Logger::ptr g_logger = STAR_LOG_ROOT();
 int main(){
     //STAR_LOG_DEBUG(g_logger) << STAR_LOG_NAME("system").get()->getLevel();
     STAR_LOG_NAME("system").get()->setLevel(star::LogLevel::FATAL);
-    g_logger->setLevel(star::LogLevel::FATAL);
+    //g_logger->setLevel(star::LogLevel::FATAL);
     //star::Config::LoadFromFile("../config/log.yaml");
     star::IOManager::ptr ioManager(new star::IOManager{8});
     ioManager->submit([]{
@@ -44,7 +44,7 @@ int main(){
             star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
             star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
             client->connect(address);
-            for(int i=0;i<1000;++i){
+            for(int i=0;i<100;++i){
                 auto res = client->call<std::string>("get",std::to_string(i),false);
                 if(res.getCode() == star::rpc::RPC_SUCCESS) {
                     STAR_LOG_DEBUG(g_logger) << i << " value is " << res.getVal();
