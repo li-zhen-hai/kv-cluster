@@ -815,29 +815,43 @@ void Raft_Server::recover(){
         long len = lseek(fd,0,SEEK_END);
         char* buf = (char*)mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);
         std::string str(buf,len);
-        size_t pos = 0;
-        while(pos < str.size()) {
+        //size_t pos = 0;
+        star::rpc::Serializer s(str);
+        while(s.size() > 0) {
                 try{
-                        size_t n_pos = str.find("\n",pos);
-                        std::string tmp = str.substr(pos,n_pos-pos);
-                        //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << tmp;
-                        int pos1 = tmp.find(">");
-                        std::string index = tmp.substr(1,pos1-1);
-                        tmp = tmp.substr(pos1+2);
-                        pos1 = tmp.find(">");
-                        std::string term = tmp.substr(0,pos1);
-                        std::string value = tmp.substr(pos1+2);
-                        value = value.substr(0,value.size()-1);
-                        //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << term << " " << value;
-                        log.push_back({atoi(index.c_str()),atoi(term.c_str()),value});
-                        // }
-                        pos = n_pos+1;
-                        //lastApplied = atoi(index.c_str());
-                        commitIndex = atoi(index.c_str());
+                        LogEntry tmp;
+                        s >> tmp;
+                        log.push_back(tmp);
+                        commitIndex = tmp.index;
+                        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << tmp.index <<","<<tmp.term<<","<<tmp.value;
                 }catch(...){
-                        //pos = n_pos+1;
+                        break;
                 }
         }
+        // while(pos < str.size()) {
+        //         try{
+        //                 size_t n_pos = str.find("\n",pos);
+        //                 std::string tmp = str.substr(pos,n_pos-pos);
+        //                 //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << tmp;
+        //                 int pos1 = tmp.find(">");
+        //                 std::string index = tmp.substr(1,pos1-1);
+        //                 tmp = tmp.substr(pos1+2);
+        //                 pos1 = tmp.find(">");
+        //                 std::string term = tmp.substr(0,pos1);
+        //                 std::string value = tmp.substr(pos1+2);
+        //                 value = value.substr(0,value.size()-1);
+        //                 //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << term << " " << value;
+        //                 log.push_back({atoi(index.c_str()),atoi(term.c_str()),value});
+        //                 // }
+        //                 pos = n_pos+1;
+        //                 //lastApplied = atoi(index.c_str());
+
+
+        //                 commitIndex = atoi(index.c_str());
+        //         }catch(...){
+        //                 //pos = n_pos+1;
+        //         }
+        // }
         if(log.size()==0)
                 return ;
         for(int i=0;i<(int)log.size();++i){
@@ -915,7 +929,7 @@ void Raft_Server::persisentlog(){
         std::shared_ptr<int> a(&fd,[](int* fd){
                 close(*fd);
         });
-        char buf[100]={0};
+        //char buf[100]={0};
         //MutexType::Lock mutex(p_mutex);
         // for(auto it : data){
         //         sprintf(buf,"<%d><%d><%s>\n",it.index,it.term,it.value.c_str());
@@ -925,12 +939,15 @@ void Raft_Server::persisentlog(){
         // }
         int i = pindex+1;
         for(;i<=lindex && i-baseIndex < (int)data.size();++i){
-                sprintf(buf,"<%d><%d><%s>\n",data[i-baseIndex].index,data[i-baseIndex].term,data[i-baseIndex].value.c_str());
+                //sprintf(buf,"<%d><%d><%s>\n",data[i-baseIndex].index,data[i-baseIndex].term,data[i-baseIndex].value.c_str());
+                star::rpc::Serializer s;
+                s << data[i-baseIndex];
+                s.reset();
                 size_t n = 0;
                 do{
-                        n=write(fd,buf,strlen(buf));
-                }while(n!=strlen(buf));
-                memset(buf,0,sizeof(buf));
+                        n=write(fd,s.toString().c_str(),s.size());
+                }while(n!=(size_t)s.size());
+                // memset(buf,0,sizeof(buf));
         }
         MutexType::Lock lock(m_mutex);
         persisentLog = i-1;
@@ -957,16 +974,26 @@ void Raft_Server::async_persisent_log(){
                 close(*fd);
         });
         while(true){
+                // LogEntry tmp;
+                // async_persisent_log_chan >> tmp;
+                // char buf[100]={0};
+                // sprintf(buf,"<%d><%d><%s>\n",tmp.index,tmp.term,tmp.value.c_str());
+                // size_t n = 0;
+                // do{
+                //         n=write(fd,buf,strlen(buf));
+                //        // STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "write log : " << buf <<",strlen is "<< strlen(buf)<<",n is " << n;
+                // }while(n!=strlen(buf));
+                // memset(buf,0,sizeof(buf));
+
+                star::rpc::Serializer s;
                 LogEntry tmp;
                 async_persisent_log_chan >> tmp;
-                char buf[100]={0};
-                sprintf(buf,"<%d><%d><%s>\n",tmp.index,tmp.term,tmp.value.c_str());
+                s << tmp;
+                s.reset();
                 size_t n = 0;
                 do{
-                        n=write(fd,buf,strlen(buf));
-                       // STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "write log : " << buf <<",strlen is "<< strlen(buf)<<",n is " << n;
-                }while(n!=strlen(buf));
-                memset(buf,0,sizeof(buf));
+                        n=write(fd,s.toString().c_str(),s.size());
+                }while(n!=(size_t)s.size());
                 persisentLog = tmp.index;
         }
 }
