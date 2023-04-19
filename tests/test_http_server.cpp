@@ -81,7 +81,7 @@ int main(){
             s+="\n\t\txhr.open(\"POST\",url,true);";
             s+="\n\t\txhr.onreadystatechange = function() {\n\t\t\tif(xhr.readyState === 4 && xhr.status === 200){";
             s+="\n\t\t\t\tvar ret = xhr.responseText;\n\t\t\t\tif(ret === key){\n\t\t\t\t\talert(\"add sucess,please refresh the page.\");";
-            s+="\n\t\t\t\t}else{\n\t\t\t\t\talert(\"add fail,please wait and try again.\");\n\t\t\t\t}\n\t\t\t}\n\t\t};";
+            s+="\n\t\t\t\t}else{\n\t\t\t\t\talert(\"add fail,please wait and try again\");\n\t\t\t\t}\n\t\t\t\twindow.location.reload();\n\t\t\t}\n\t\t};";
             s+="\n\t\txhr.send();\n\t}\n</script>";
             s+="\n</html>";
             response->setBody(s);
