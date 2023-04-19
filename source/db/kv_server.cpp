@@ -51,6 +51,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
 
     auto fun11 = std::function<bool()>(std::bind(&kv_server::createSnapshot,this));
     auto fun12 = std::function<bool()>(std::bind(&kv_server::snapshotPersisent,this));
+    auto fun13 = std::function<std::map<std::string,std::string>()>(std::bind(&kv_server::GetAllKV,this));
 
     m_server->registerMethod("set",fun1);
     m_server->registerMethod("get",fun2);
@@ -63,6 +64,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     m_server->registerMethod("TCC_Commit",fun8);
     m_server->registerMethod("TCC_Cancel",fun9);
     m_server->registerMethod("clean",fun10);
+    m_server->registerMethod("GetAllKV",fun13);
 
     while(!m_server->bind(address)){
         sleep(1);
@@ -769,6 +771,17 @@ begin:
         //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "CreateSnapshot func return false";
         return false;
     }
+}
+
+std::map<std::string,std::string> kv_server::GetAllKV(){
+    std::map<std::string,std::string> kvs;
+    leveldb::ReadOptions options;
+    options.snapshot = db->GetSnapshot();
+    leveldb::Iterator* iter = db->NewIterator(options);
+    for(iter->SeekToFirst();iter->Valid();iter->Next()){
+        kvs[iter->key().ToString()]=iter->value().ToString();
+    }
+    return kvs;
 }
 
 kv_server::~kv_server(){

@@ -130,6 +130,34 @@ std::string kv_client::get(const std::string& key){
     return "";
 }
 
+std::map<std::string,std::string> kv_client::GetAllKV(){
+    if(isclose)
+        throw std::logic_error("server close!");
+    calls++;
+    std::shared_ptr<int> flag(nullptr,[this](int*){
+        (this->calls)--;
+    });
+    for(size_t i=0;i<m_servers.size();++i){
+        if(!m_servers[i]->isConnected()){
+            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+            if(new_client->connect(addrs[i])){
+                    m_servers[i]=new_client;
+                }else{
+                    continue;
+                }
+        }
+        if(!still_alive()){
+            STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
+            throw std::logic_error("Raft-Server Error!");
+        }
+        auto res = m_servers[i]->call<std::map<std::string,std::string>>("GetAllKV");
+        if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
+            return res.getVal();
+        }
+    }
+    return {};
+}
+
 // std::vector<std::string> kv_client::GetAllKey(){
 //     if(isclose)
 //         throw "server close";

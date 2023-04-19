@@ -101,6 +101,8 @@ public:
      */
     std::string get(std::string key);
 
+    std::map<std::string,std::string> GetAllKV();
+
     void close();
 
     ~shared_kv();

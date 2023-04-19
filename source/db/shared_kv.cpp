@@ -30,10 +30,12 @@ void shared_kv::start(star::Address::ptr addr){
     auto func1 = std::function<bool(std::string,std::string,bool)>(std::bind(&shared_kv::set,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3));
     auto func2 = std::function<std::string(std::string)>(std::bind(&shared_kv::get,this,std::placeholders::_1));
     auto func3 = std::function<bool(std::vector<std::string>,std::vector<std::string>)>(std::bind(&shared_kv::atomic_set,this,std::placeholders::_1,std::placeholders::_2));
+    auto func4 = std::function<std::map<std::string,std::string>()>(std::bind(&shared_kv::GetAllKV,this));
 
     m_server->registerMethod("set",func1);
     m_server->registerMethod("get",func2);
     m_server->registerMethod("atomic_set",func3);
+    m_server->registerMethod("GetAllKV",func4);
 
     m_server->setName("SharedKv");
     while(!m_server->bind(addr)){
@@ -182,6 +184,16 @@ bool shared_kv::atomic_set(std::vector<std::string> keys,std::vector<std::string
         }
     }
     return flag;
+}
+
+std::map<std::string,std::string> shared_kv::GetAllKV(){
+    std::map<std::string,std::string> ret;
+    for(int i=0;i<(int)m_sessions.size();++i){
+        std::map<std::string,std::string> tmp = m_sessions[i]->GetAllKV();
+        for(auto it:tmp)
+            ret[it.first] = it.second;
+    }
+    return ret;
 }
 
 void shared_kv::close(){

@@ -59,6 +59,8 @@ public:
 
     ~kv_server();
 
+    std::map<std::string,std::string> GetAllKV();
+
     //uint64_t GetMaxVersion();
 
 private:
