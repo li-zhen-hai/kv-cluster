@@ -53,8 +53,8 @@ int shared_kv::addserver(std::vector<std::string> ips){
     kv_client::ptr session(new kv_client());
     session->start(ips);
 
-    while(!session->clean())
-        STAR_LOG_ERROR(STAR_LOG_ROOT()) << "session can not clean!";
+    // while(!session->clean())
+    //     STAR_LOG_ERROR(STAR_LOG_ROOT()) << "session can not clean!";
 
     size_t pos = -1;
     {
