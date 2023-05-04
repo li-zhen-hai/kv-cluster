@@ -1026,13 +1026,14 @@ int Raft_Server::GetLiveNode(){
                 if(servers[i]->isConnected())
                         ret++;
                 else{
-                        star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-                        new_client->setTimeout(g_heartbeat_time->getValue()/(int)(servers.size()));
-                        if(new_client->connect(star::Address::LookupAny(m_addrs[i]))){
-                                MutexType::Lock mutex(m_mutex);
-                                servers[i]=new_client;
-                                ret++;
-                        }
+                        go [this,i] {
+                                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                                new_client->setTimeout(g_heartbeat_time->getValue()/(int)(servers.size()));
+                                if(new_client->connect(star::Address::LookupAny(m_addrs[i]))){
+                                        MutexType::Lock mutex(m_mutex);
+                                        servers[i]=new_client;
+                                }
+                        };
                 }
         }
         return ret;
