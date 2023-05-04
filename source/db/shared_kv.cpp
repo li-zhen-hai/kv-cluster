@@ -189,7 +189,12 @@ bool shared_kv::atomic_set(std::vector<std::string> keys,std::vector<std::string
 std::map<std::string,std::string> shared_kv::GetAllKV(){
     std::map<std::string,std::string> ret;
     for(int i=0;i<(int)m_sessions.size();++i){
-        std::map<std::string,std::string> tmp = m_sessions[i]->GetAllKV();
+        std::map<std::string,std::string> tmp;
+        try{
+            tmp = m_sessions[i]->GetAllKV();
+        }catch(...){
+            continue;
+        }
         for(auto it:tmp)
             ret[it.first] = it.second;
     }

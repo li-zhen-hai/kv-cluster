@@ -17,7 +17,7 @@ int main(){
         star::Address::ptr address = star::Address::LookupAny("0.0.0.0:12345");
         star::http::HttpServer::ptr server(new star::http::HttpServer(true));
         server->getServletDispatch()->addGlobServlet("/*",
-                     std::make_shared<star::http::FileServlet>("/"));
+                     std::make_shared<star::http::FileServlet>("../../html"));
         server->getServletDispatch()->addServlet("/a",[](star::http::HttpRequest::ptr request
                 , star::http::HttpResponse::ptr response
                 , star::http::HttpSession::ptr session) ->uint32_t {
@@ -110,6 +110,26 @@ int main(){
             }
             return 0;
         });
+
+        server->getServletDispatch()->addServlet("/GetAllCluster",[](star::http::HttpRequest::ptr request
+                , star::http::HttpResponse::ptr response
+                , star::http::HttpSession::ptr session) ->uint32_t {
+            STAR_LOG_INFO(g_logger) << "GetAllCluster run!";
+            star::Json json;
+            star::Json data[3];
+            for(int i=0;i<3;++i){
+                data[i]["id"] = i;
+                data[i]["size"] = 3;
+                data[i]["read"] = 0;
+                data[i]["write"] = 0;
+                data[i]["sum"] = 0;
+            }
+            json["data"]=data;
+            response->setJson(json);
+            return 0;
+        });
+
+        // server->getServletDispatch()->addServlet("/index.html",std::make_shared<star::http::FileServlet>("../../html"));
 
         while (!server->bind(address)){
             sleep(1);

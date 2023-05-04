@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>集群详情</title>
+    <link rel="stylesheet" type="text/css" href="css/all.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="external nofollow" > -->
+</head>
+<body>
+        <div class="wrapperBox">
+            <div class="header">
+                <div class="headerTitle">
+                    <div class="headerLine">kv-cluster集群</div>
+                </div>
+            </div>
+            <div class="container">
+                <table id="containerTable">
+                    <thead class="tableHeaher">
+                    <tr>
+                        <th>Group序号</th>
+                        <th>Group机器规模</th>
+                        <th>读取请求</th>
+                        <th>写入请求</th>
+                        <th>Group存储规模</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tdata" class="tableLine">
+                    <script>
+                        $(function(){
+                            $.ajax({
+                                url:'GetAllCluster',
+                                type:'get',
+                                dataType:'json',
+                                success:function(data){
+                                    //alert(data.data[2].id)
+                                    for(i in data.data)
+                                    {
+                                        var tr
+                                        tr='<td>'+data.data[i].id+'</td>'+'<td>'+data.data[i].size+'</td>'+'<td>'+data.data[i].read+'</td>'+'<td>'+data.data[i].write+'</td>'+'<td>'+data.data[i].sum+'</td>'
+                                        tr=tr+'<td>'+'<a href=/"cluster?&id='+data.data[i].id+'/">详情</td>'
+                                        $("#containerTable").append('<tr class="trHover">'+tr+'</tr>')
+                                    }
+                                }
+                            })
+                        })
+                    </script>
+                    </tbody>
+                </table>
+        </div>
+        
+</body>
+</html>
