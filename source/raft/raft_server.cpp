@@ -27,6 +27,8 @@ static ConfigVar<bool>::ptr g_is_prepare_vote_run = Config::Lookup<bool>("is_pre
 static ConfigVar<int>::ptr g_prepare_try_vote_count = Config::Lookup<int>("prepare_try_vote_count",5,"prepare_try_vote_count");
 
 bool Raft_Server::isUptoMe(int index,int term) {
+        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "currentTerm "<< log.back().term <<",term "<<term;
+        STAR_LOG_DEBUG(STAR_LOG_ROOT()) <<"currtentIndex "<< log.back().index <<",index "<<index; 
         return term > log.back().term || (term == log.back().term && index >= log.back().index);
 }
 
@@ -35,6 +37,8 @@ static int GetRandomNumber(){
         struct timespec p = {0,0};
         clock_gettime(a,&p);
         srand((unsigned)p.tv_nsec);
+        int ret = rand();
+        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "rand number is " << ret;
         return rand();
 }
 
@@ -149,7 +153,10 @@ void Raft_Server::update(){
                  heartBeat->reset(g_heartbeat_time->getValue(),[this](){
                          //go [this] {
                                  //this->update();
-                                 this->boardcastHeartBeat();
+                                 if(GetLiveNode() > (int)servers.size()/2)
+                                        this->boardcastHeartBeat();
+                                else
+                                        state = State::Follower_State;
                          //};
                  },true);
 	}else{
@@ -161,6 +168,7 @@ void Raft_Server::update(){
                                          //this->update();
                                          //this->state = State::Candidate_State;
                                          //this->overtime = true;
+                                         votedFor=id;
                                          this->boardcastPrepareVote();
                                  //};
                          },true);
@@ -171,16 +179,21 @@ void Raft_Server::update(){
                                  //this->update();
                                  //this->state = State::Candidate_State;
                                  //this->overtime = true;
+                                 votedFor=id;
                                  this->boardcastPrepareVote();
                          //};
                  },true);
                 if(!lease){
-                        lease = IOManager::GetThis()->addTimer(g_heartbeat_time->getValue(),[this](){
+                        lease = IOManager::GetThis()->addTimer(g_heartbeat_time->getValue()-g_heartbeat_time->getValue()/10,[this](){
+                                STAR_LOG_INFO(STAR_LOG_ROOT()) << "lease_time was false";
                                 lease_time = false;
-                        });
-                }else{
-                        lease->refresh();
+                        },true);
                 }
+                lease->reset(g_heartbeat_time->getValue()-g_heartbeat_time->getValue()/10,[this](){
+                        STAR_LOG_INFO(STAR_LOG_ROOT()) << "lease_time was false";
+                        lease_time = false;
+                },true);
+                
         }
         return ;
 }
@@ -253,7 +266,7 @@ bool Raft_Server::sendAppendLogEntry(int server,AppendLogEntryArgs args){
 }
 
 void Raft_Server::boardcastHeartBeat(){
-        //STAR_LOG_INFO(STAR_LOG_ROOT()) << id <<" begin heartBeat";
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << id <<" begin heartBeat";
         
         MutexType::Lock lock(m_mutex);
 
@@ -346,7 +359,7 @@ void Raft_Server::boardcastRequestVote(){
                 for(size_t i=0;i<m_addrs.size();++i){
                         if((int)i == id)
                                 continue;
-                        //go [this,i,args] {
+                        go [this,i,args] {
                                 if(this->state != State::Candidate_State)
                                         return ;
                                 if(!servers[i]->isConnected()){
@@ -362,7 +375,7 @@ void Raft_Server::boardcastRequestVote(){
                                                         return;
                                                 }
                                         };
-                                        continue;
+                                        // continue;
                                 }
                                 rpc::Result<RequestVoteReply> res = servers[i]->call<RequestVoteReply>("requestVote",args);
                                 MutexType::Lock lock(this->m_mutex);
@@ -370,7 +383,7 @@ void Raft_Server::boardcastRequestVote(){
                                         RequestVoteReply reply = res.getVal();
                                         this->handleRequestVote(reply);
                                 }
-                        //};
+                        };
                 }
                 winPreVote = false;
         }
@@ -392,10 +405,9 @@ AppendLogEntryReply Raft_Server::appendlog(AppendLogEntryArgs args) {
                 reply.nextTryLog = log.back().index+1;
                 return reply;
         }
-
+        lease_time = true;
         update();
         //recive_heartbeat = true;
-        lease_time = true;
 
         if(args.term > currentTerm) {
                 state = State::Follower_State;
@@ -443,11 +455,12 @@ AppendLogEntryReply Raft_Server::appendlog(AppendLogEntryArgs args) {
 }
 
 RequestVoteReply Raft_Server::requestVote(RequestVoteArgs args){
-        // STAR_LOG_INFO(STAR_LOG_ROOT()) << "receive requestvote";
-        // STAR_LOG_INFO(STAR_LOG_ROOT()) << "term is " << args.term <<" ,currentterm is " << currentTerm
-        //                                << ",candidated is " << args.candidateId << " me is " << id
-        //                                << ",lastLogIndex is " << args.lastLogIndex << " mylastlog index is " << log.back().index 
-        //                                << ",LastLogTerm is " << args.lastLogTerm << "mylastlog term is " << log.back().term;
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "receive requestvote";
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "term is " << args.term <<" ,currentterm is " << currentTerm
+                                       << ",candidated is " << args.candidateId << " me is " << id
+                                       << ",lastLogIndex is " << args.lastLogIndex << " mylastlog index is " << log.back().index 
+                                       << ",LastLogTerm is " << args.lastLogTerm << "mylastlog term is " << log.back().term
+                                       << ",lease_time "<< lease_time;
         //m_mutex.lock();
         MutexType::Lock lock(m_mutex);
         RequestVoteReply reply;
@@ -468,12 +481,13 @@ RequestVoteReply Raft_Server::requestVote(RequestVoteArgs args){
         reply.voteGranted = false;
 
         if ((votedFor == -1 || votedFor == args.candidateId) && isUptoMe(args.lastLogIndex,args.lastLogTerm)){
-                //state = State::Follower_State;
+                state = State::Follower_State;
                 votedFor = args.candidateId;
                 reply.voteGranted = true;
                 //recive_heartbeat = true;
                 update();
         }
+        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "reply " << reply.voteGranted;
         return reply;
 }
 
@@ -497,9 +511,15 @@ RequestVoteReply Raft_Server::PrepareVote(RequestVoteArgs args){
 }
 
 void Raft_Server::boardcastPrepareVote(){
-        // if(state == State::Follower_State) {
-        //         //STAR_LOG_INFO(STAR_LOG_ROOT()) << "boardcastPrepareVote!!!!";
-        //         //STAR_LOG_INFO(STAR_LOG_ROOT()) << "currentTerm is "<< currentTerm;
+
+        if(state == State::Leader_State || votedFor !=id){
+                return ;
+        }
+
+        if(state == State::Follower_State) {
+                STAR_LOG_INFO(STAR_LOG_ROOT()) << "boardcastPrepareVote!!!!";
+                STAR_LOG_INFO(STAR_LOG_ROOT()) << "currentTerm is "<< currentTerm;
+        }
 
         if(!g_is_prepare_vote_run->getValue()){
                 boardcastRequestVote();
@@ -538,7 +558,7 @@ void Raft_Server::boardcastPrepareVote(){
         for(size_t i=0;i<m_addrs.size();++i){
                 if((int)i == id)
                         continue;
-                //go [this,i,args] {
+                go [this,i,args] {
                         if(this->state != State::Follower_State)
                                 return ;
                         if(!servers[i]->isConnected()){
@@ -552,10 +572,10 @@ void Raft_Server::boardcastPrepareVote(){
                                                 return;
                                         }
                                 };
-                                continue;
+                                //continue;
                         }
                         rpc::Result<RequestVoteReply> res = servers[i]->call<RequestVoteReply>("PrepareVote",args);
-                        MutexType::Lock lock(this->m_mutex);
+                        //MutexType::Lock lock(this->m_mutex);
                         if(res.getCode() == rpc::RpcState::RPC_SUCCESS){
                                 RequestVoteReply reply = res.getVal();
                                 if(reply.voteGranted)
@@ -563,10 +583,11 @@ void Raft_Server::boardcastPrepareVote(){
                                 if(this->prepareCount > ((int)this->m_addrs.size()/2)){
                                         this->winPreVote=true;
                                         //if(!lease_time)
-                                        //boardcastRequestVote();
+                                        state = State::Candidate_State;
+                                        boardcastRequestVote();
                                 }
                         }
-                //};
+                };
         }
         // }
         return ;
@@ -574,8 +595,8 @@ void Raft_Server::boardcastPrepareVote(){
 
 void Raft_Server::handleRequestVote(RequestVoteReply reply){
         // MutexType::Lock lock(m_mutex);
-        //STAR_LOG_INFO(STAR_LOG_ROOT()) <<"reply term is " << reply.term
-        //                               <<", voteGranted " << reply.voteGranted;
+        STAR_LOG_INFO(STAR_LOG_ROOT()) <<"reply term is " << reply.term
+                                      <<", voteGranted " << reply.voteGranted;
         if(reply.term < currentTerm)
                 return ;
         if(reply.term > currentTerm){
@@ -585,7 +606,7 @@ void Raft_Server::handleRequestVote(RequestVoteReply reply){
                 update();
                 return ;
         }
-
+        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "vote count is " << voteCount;
         if(state == State::Candidate_State && reply.voteGranted) {
                 voteCount += 1;
                 if(voteCount > (int)m_addrs.size()/2) {
