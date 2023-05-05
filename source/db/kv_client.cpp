@@ -24,6 +24,21 @@ bool kv_client::start(){
         client->connect(addrs[j]);
         m_servers.push_back(client);
     }
+
+    go [this] {
+        sleep(3);
+        for(size_t i=0;i<m_servers.size() && !isclose;++i){
+            if(!m_servers[i]->isConnected()){
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
+                }else{
+                    continue;
+                }
+            }
+        }
+    };
+
     return true;
 }
 
@@ -35,6 +50,21 @@ bool kv_client::start(std::vector<star::Address::ptr> s_addrs){
         client->connect(addrs[j]);
         m_servers.push_back(client);
     }
+
+    go [this] {
+        sleep(3);
+        for(size_t i=0;i<m_servers.size() && !isclose;++i){
+            if(!m_servers[i]->isConnected()){
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
+                }else{
+                    continue;
+                }
+            }
+        }
+    };
+
     return true;
 }
 
@@ -47,6 +77,21 @@ bool kv_client::start(std::vector<std::string> s_ips){
         client->connect(addrs[j]);
         m_servers.push_back(client);
     }
+
+    go [this] {
+        sleep(3);
+        for(size_t i=0;i<m_servers.size() && !isclose;++i){
+            if(!m_servers[i]->isConnected()){
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
+                }else{
+                    continue;
+                }
+            }
+        }
+    };
+
     return true;
 }
 
@@ -69,12 +114,13 @@ bool kv_client::set(const std::string& key,const std::string& val,uint64_t versi
     });
     for(size_t i=0;i<m_servers.size() && !isclose;++i){
         if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-            }else{
-                continue;
-            }
+            go [this,i]{
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
+                }
+            };
+            continue;
         }
         if(!still_alive()){
             STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
@@ -109,12 +155,13 @@ std::string kv_client::get(const std::string& key){
     });
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-                }else{
-                    continue;
+            go [this,i] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
                 }
+            };
+            continue;
         }
         if(!still_alive()){
             STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
@@ -139,12 +186,13 @@ std::map<std::string,std::string> kv_client::GetAllKV(){
     });
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-                }else{
-                    continue;
+            go [this,i] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
                 }
+            };
+            continue;
         }
         if(!still_alive()){
             STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
@@ -222,12 +270,13 @@ std::unordered_map<std::string,std::pair<std::string,uint64_t>> kv_client::GetSn
     std::unordered_map<std::string,std::pair<std::string,uint64_t>> ret;
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-                }else{
-                    continue;
+            go [this,i] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
                 }
+            };
+            continue;
         }
         auto res = m_servers[i]->call<std::unordered_map<std::string,std::pair<std::string,uint64_t>>>("GetSnapshot");
         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
@@ -246,12 +295,13 @@ bool kv_client::ApplySnapshot(std::unordered_map<std::string,std::pair<std::stri
     });
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-                }else{
-                    continue;
+            go [this,i] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
                 }
+            };
+            continue;
         }
         auto res = m_servers[i]->call<bool>("ApplySnapshot",shot);
         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
@@ -354,12 +404,13 @@ std::pair<uint64_t,uint64_t> kv_client::GetOps(){
     });
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-                }else{
-                    continue;
+            go [this,i] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
                 }
+            };
+            continue;
         }
         if(!still_alive()){
             STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
@@ -383,12 +434,13 @@ bool kv_client::clean(){
     });
     for(size_t i=0;i<m_servers.size() && !isclose;){
         if(!m_servers[i]->isConnected()){
-            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
-            if(new_client->connect(addrs[i])){
-                    m_servers[i]=new_client;
-            }else{
-                continue;
-            }
+            go [this,i] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
+                }
+            };
+            continue;
         }
         if(!still_alive()){
             STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
@@ -411,6 +463,7 @@ int kv_client::GetServerSize(){
 std::vector<std::pair<std::string,std::string>> kv_client::GetCluster(){
     std::vector<std::pair<std::string,std::string>> ret;
     for(size_t i=0;i<m_servers.size();++i){
+start:
         if(m_servers[i]->isConnected()){
             auto res = m_servers[i]->call<int>("GetState");
             //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << i << "server " << res.getCode();
@@ -428,6 +481,12 @@ std::vector<std::pair<std::string,std::string>> kv_client::GetCluster(){
                 ret.push_back({"否",""});
             }
         }else{
+            go [this,i] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[i])){
+                        m_servers[i]=new_client;
+                }
+            };       
             ret.push_back({"否",""});
         }
     }
