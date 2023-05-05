@@ -63,6 +63,8 @@ public:
 
     std::pair<uint64_t,uint64_t> GetOps();
 
+    int GetState();
+
     //uint64_t GetMaxVersion();
 
 private:

@@ -52,6 +52,8 @@ public:
 
     int GetServerSize();
 
+    std::vector<std::pair<std::string,std::string>> GetCluster();
+
     // std::vector<std::string> GetAllKey();
 
     // Data erase(std::string key);

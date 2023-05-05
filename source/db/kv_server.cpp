@@ -55,6 +55,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     auto fun12 = std::function<bool()>(std::bind(&kv_server::snapshotPersisent,this));
     auto fun13 = std::function<std::map<std::string,std::string>()>(std::bind(&kv_server::GetAllKV,this));
     auto fun14 = std::function<std::pair<uint64_t,uint64_t>()>(std::bind(&kv_server::GetOps,this));
+    auto fun15 = std::function<int()>(std::bind(&kv_server::GetState,this));
 
     m_server->registerMethod("set",fun1);
     m_server->registerMethod("get",fun2);
@@ -69,6 +70,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     m_server->registerMethod("clean",fun10);
     m_server->registerMethod("GetAllKV",fun13);
     m_server->registerMethod("GetOps",fun14);
+    m_server->registerMethod("GetState",fun15);
 
     while(!m_server->bind(address)){
         sleep(1);
@@ -798,6 +800,15 @@ std::pair<uint64_t,uint64_t> kv_server::GetOps(){
         throw std::logic_error("Not Leader");
     STAR_LOG_INFO(STAR_LOG_ROOT()) << "read "<< reads <<",write "<< writes;
     return {reads,writes};
+}
+
+int kv_server::GetState(){
+    if(r_server->getState() == Raft_Server::State::Leader_State)
+        return 1;
+    else if(r_server->getState() == Raft_Server::State::Candidate_State)
+        return 2;
+    else
+        return 3;
 }
 
 kv_server::~kv_server(){

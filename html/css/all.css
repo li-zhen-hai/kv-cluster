@@ -118,3 +118,8 @@ td{
     text-align: right;
     border-top: 1px solid #e5e5e5;
 }
+.main{
+	width: 1229px;
+	height: 645px;
+	/* margin: auto; */
+}

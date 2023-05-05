@@ -31,13 +31,15 @@ void shared_kv::start(star::Address::ptr addr){
     auto func2 = std::function<std::string(std::string)>(std::bind(&shared_kv::get,this,std::placeholders::_1));
     auto func3 = std::function<bool(std::vector<std::string>,std::vector<std::string>)>(std::bind(&shared_kv::atomic_set,this,std::placeholders::_1,std::placeholders::_2));
     auto func4 = std::function<std::map<std::string,std::string>()>(std::bind(&shared_kv::GetAllKV,this));
-    auto func5 = std::function<std::map<int,std::vector<std::string>>()>(std::bind(&shared_kv::GetCluster,this));
+    auto func5 = std::function<std::map<int,std::vector<std::string>>()>(std::bind(&shared_kv::GetAllCluster,this));
+    auto func6 = std::function<std::map<int,std::vector<std::string>>(int)>(std::bind(&shared_kv::GetCluster,this,std::placeholders::_1));
 
     m_server->registerMethod("set",func1);
     m_server->registerMethod("get",func2);
     m_server->registerMethod("atomic_set",func3);
     m_server->registerMethod("GetAllKV",func4);
-    m_server->registerMethod("GetCluster",func5);
+    m_server->registerMethod("GetAllCluster",func5);
+    m_server->registerMethod("GetCluster",func6);
 
     m_server->setName("SharedKv");
     while(!m_server->bind(addr)){
@@ -203,7 +205,7 @@ std::map<std::string,std::string> shared_kv::GetAllKV(){
     return ret;
 }
 
-std::map<int,std::vector<std::string>> shared_kv::GetCluster(){
+std::map<int,std::vector<std::string>> shared_kv::GetAllCluster(){
     std::map<int,std::vector<std::string>> ret;
     for(int i=0;i<(int)(m_sessions.size());++i){
         ret[i].push_back(std::to_string(m_sessions[i]->GetServerSize()));
@@ -212,6 +214,18 @@ std::map<int,std::vector<std::string>> shared_kv::GetCluster(){
         ret[i].push_back(std::to_string(tmp.first));
         ret[i].push_back(std::to_string(tmp.second));
         ret[i].push_back(std::to_string(m_sessions[i]->GetAllKV().size()));
+    }
+    return ret;
+}
+
+std::map<int,std::vector<std::string>> shared_kv::GetCluster(int id){
+    //STAR_LOG_INFO(STAR_LOG_ROOT()) << "GetCluster run";
+    std::map<int,std::vector<std::string>> ret;
+    std::vector<std::pair<std::string,std::string>> tmp = m_sessions[id]->GetCluster();
+    for(int i=0;i<(int)tmp.size();++i){
+        //STAR_LOG_INFO(STAR_LOG_ROOT()) << tmp[i].first <<","<<tmp[i].second;
+        ret[i].push_back(tmp[i].first);
+        ret[i].push_back(tmp[i].second);
     }
     return ret;
 }

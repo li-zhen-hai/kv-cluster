@@ -103,7 +103,9 @@ public:
 
     std::map<std::string,std::string> GetAllKV();
 
-    std::map<int,std::vector<std::string>> GetCluster();
+    std::map<int,std::vector<std::string>> GetAllCluster();
+
+    std::map<int,std::vector<std::string>> GetCluster(int id);
 
     void close();
 

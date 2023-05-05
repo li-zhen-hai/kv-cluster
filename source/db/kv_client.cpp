@@ -408,6 +408,32 @@ int kv_client::GetServerSize(){
     return (int)(m_servers.size());
 }
 
+std::vector<std::pair<std::string,std::string>> kv_client::GetCluster(){
+    std::vector<std::pair<std::string,std::string>> ret;
+    for(size_t i=0;i<m_servers.size();++i){
+        if(m_servers[i]->isConnected()){
+            auto res = m_servers[i]->call<int>("GetState");
+            //STAR_LOG_DEBUG(STAR_LOG_ROOT()) << i << "server " << res.getCode();
+            if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
+                if(res.getVal() == 1){
+                    ret.push_back({"是","Leader"});
+                }else if(res.getVal() == 2){
+                    ret.push_back({"是","Candidate"});
+                }else if(res.getVal() == 3){
+                    ret.push_back({"是","Follow"});
+                }else{
+                    ret.push_back({"否",""});
+                }
+            }else{
+                ret.push_back({"否",""});
+            }
+        }else{
+            ret.push_back({"否",""});
+        }
+    }
+    return ret;
+}
+
 bool kv_client::still_alive(){
     size_t num=0;
     for(size_t i=0;i<m_servers.size();++i)

@@ -111,6 +111,41 @@ int main(){
             return 0;
         });
 
+        server->getServletDispatch()->addServlet("/GetCluster",[](star::http::HttpRequest::ptr request
+                , star::http::HttpResponse::ptr response
+                , star::http::HttpSession::ptr session) ->uint32_t {
+            STAR_LOG_INFO(g_logger) << "GetCluster run!";
+            int id = request->getParamAs<int>("id");
+            star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
+            star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
+            client->connect(address);
+            auto res = client->call<std::map<int,std::vector<std::string>>>("GetCluster",id);
+            std::map<int,std::vector<std::string>> tmp;
+            if(res.getCode() == star::rpc::RPC_SUCCESS)
+                tmp = res.getVal();
+            star::Json json;
+            std::vector<star::Json> data((int)tmp.size());
+            for(int i=0;i<(int)tmp.size();++i){
+                // STAR_LOG_INFO(STAR_LOG_ROOT()) << "GetCluster : id "<<i<<",state "<<tmp[i][0] << ",raft "<<tmp[i][1];
+                data[i]["id"] = i;
+                data[i]["state"] = tmp[i][0];
+                data[i]["raft"] = tmp[i][1];
+            }
+            json["data"]=data;
+            response->setJson(json);
+            return 0;
+        });
+
+        // server->getServletDispatch()->addServlet("/cluster",[](star::http::HttpRequest::ptr request
+        //         , star::http::HttpResponse::ptr response
+        //         , star::http::HttpSession::ptr session) ->uint32_t {
+        //     std::string id = request->getParamAs<std::string>("id");
+        //     STAR_LOG_INFO(STAR_LOG_ROOT()) << "cluster id "<<id;
+        //     return 0;
+        // });
+
+        server->getServletDispatch()->addServlet("/cluster",std::make_shared<star::http::FileServlet>("../../html"));
+
         server->getServletDispatch()->addServlet("/GetAllCluster",[](star::http::HttpRequest::ptr request
                 , star::http::HttpResponse::ptr response
                 , star::http::HttpSession::ptr session) ->uint32_t {
@@ -118,7 +153,7 @@ int main(){
             star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
             star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
             client->connect(address);
-            auto res = client->call<std::map<int,std::vector<std::string>>>("GetCluster");
+            auto res = client->call<std::map<int,std::vector<std::string>>>("GetAllCluster");
             std::map<int,std::vector<std::string>> tmp;
             if(res.getCode() == star::rpc::RPC_SUCCESS)
                 tmp = res.getVal();
