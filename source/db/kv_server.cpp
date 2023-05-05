@@ -24,7 +24,9 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     ,r_server(nullptr)
     ,m_server(nullptr)
     ,is_stop(false)
-    ,m_seqid({0}){
+    ,m_seqid({0})
+    ,reads({0})
+    ,writes({0}){
 
     m_server.reset(new star::rpc::RpcServer());
     star::Address::ptr address = star::Address::LookupAny(m_ip);
@@ -52,6 +54,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     auto fun11 = std::function<bool()>(std::bind(&kv_server::createSnapshot,this));
     auto fun12 = std::function<bool()>(std::bind(&kv_server::snapshotPersisent,this));
     auto fun13 = std::function<std::map<std::string,std::string>()>(std::bind(&kv_server::GetAllKV,this));
+    auto fun14 = std::function<std::pair<uint64_t,uint64_t>()>(std::bind(&kv_server::GetOps,this));
 
     m_server->registerMethod("set",fun1);
     m_server->registerMethod("get",fun2);
@@ -65,6 +68,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
     m_server->registerMethod("TCC_Cancel",fun9);
     m_server->registerMethod("clean",fun10);
     m_server->registerMethod("GetAllKV",fun13);
+    m_server->registerMethod("GetOps",fun14);
 
     while(!m_server->bind(address)){
         sleep(1);
@@ -229,9 +233,10 @@ bool kv_server::set(std::string key,std::string value,uint64_t version){
 
 
 std::string kv_server::get(std::string key){
+    
     if(r_server->getState() != Raft_Server::State::Leader_State)
         throw std::logic_error("Not Leader");
-    
+    reads++;
     std::string value;
     leveldb::Status s = db->Get(leveldb::ReadOptions(), key, &value);
     if(value == "")
@@ -637,7 +642,7 @@ bool kv_server::Cancel(std::string akey,std::string aval,uint64_t version){
 bool kv_server::appendlog(std::string key,std::string val,std::string mode,uint64_t version){
     if(r_server->getState() != Raft_Server::State::Leader_State)
         throw std::logic_error("Not Leader");
-
+    writes++;
     std::shared_ptr<Channel<LogEntry>> chan(new Channel<LogEntry>(1));
 
     // {
@@ -774,14 +779,25 @@ begin:
 }
 
 std::map<std::string,std::string> kv_server::GetAllKV(){
+    if(r_server->getState() != Raft_Server::State::Leader_State)
+        throw std::logic_error("Not Leader");
+    
     std::map<std::string,std::string> kvs;
     leveldb::ReadOptions options;
     options.snapshot = db->GetSnapshot();
     leveldb::Iterator* iter = db->NewIterator(options);
     for(iter->SeekToFirst();iter->Valid();iter->Next()){
         kvs[iter->key().ToString()]=iter->value().ToString();
+        reads++;
     }
     return kvs;
+}
+
+std::pair<uint64_t,uint64_t> kv_server::GetOps(){
+    if(r_server->getState() != Raft_Server::State::Leader_State)
+        throw std::logic_error("Not Leader");
+    STAR_LOG_INFO(STAR_LOG_ROOT()) << "read "<< reads <<",write "<< writes;
+    return {reads,writes};
 }
 
 kv_server::~kv_server(){

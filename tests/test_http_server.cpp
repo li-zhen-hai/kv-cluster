@@ -115,14 +115,21 @@ int main(){
                 , star::http::HttpResponse::ptr response
                 , star::http::HttpSession::ptr session) ->uint32_t {
             STAR_LOG_INFO(g_logger) << "GetAllCluster run!";
+            star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
+            star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
+            client->connect(address);
+            auto res = client->call<std::map<int,std::vector<std::string>>>("GetCluster");
+            std::map<int,std::vector<std::string>> tmp;
+            if(res.getCode() == star::rpc::RPC_SUCCESS)
+                tmp = res.getVal();
             star::Json json;
-            star::Json data[3];
-            for(int i=0;i<3;++i){
+            std::vector<star::Json> data((int)tmp.size());
+            for(int i=0;i<(int)tmp.size();++i){
                 data[i]["id"] = i;
-                data[i]["size"] = 3;
-                data[i]["read"] = 0;
-                data[i]["write"] = 0;
-                data[i]["sum"] = 0;
+                data[i]["size"] = tmp[i][0];
+                data[i]["read"] = tmp[i][1];
+                data[i]["write"] = tmp[i][2];
+                data[i]["sum"] = tmp[i][3];
             }
             json["data"]=data;
             response->setJson(json);

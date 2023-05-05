@@ -345,6 +345,35 @@ bool kv_client::TCC_Cancel(std::vector<std::string> keys,std::vector<std::string
     return false;
 }
 
+std::pair<uint64_t,uint64_t> kv_client::GetOps(){
+    if(isclose)
+        throw std::logic_error("server close!");
+    calls++;
+    std::shared_ptr<int> flag(nullptr,[this](int*){
+        (this->calls)--;
+    });
+    for(size_t i=0;i<m_servers.size();++i){
+        if(!m_servers[i]->isConnected()){
+            star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+            if(new_client->connect(addrs[i])){
+                    m_servers[i]=new_client;
+                }else{
+                    continue;
+                }
+        }
+        if(!still_alive()){
+            STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Raft-Server occur error,Please reboot Raft-Server!";
+            throw std::logic_error("Raft-Server Error!");
+        }
+        auto res = m_servers[i]->call<std::pair<uint64_t,uint64_t>>("GetOps");
+        if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
+            STAR_LOG_INFO(STAR_LOG_ROOT()) << "kv-client report successful!"; 
+            return res.getVal();
+        }
+    }
+    return {};
+}
+
 bool kv_client::clean(){
     if(isclose)
         throw std::logic_error("server close!");
@@ -373,6 +402,10 @@ bool kv_client::clean(){
         STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "server [ "<<i<<" ] clean error!";
     }
     return true;
+}
+
+int kv_client::GetServerSize(){
+    return (int)(m_servers.size());
 }
 
 bool kv_client::still_alive(){

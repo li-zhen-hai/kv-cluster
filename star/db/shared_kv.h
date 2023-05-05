@@ -103,6 +103,8 @@ public:
 
     std::map<std::string,std::string> GetAllKV();
 
+    std::map<int,std::vector<std::string>> GetCluster();
+
     void close();
 
     ~shared_kv();

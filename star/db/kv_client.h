@@ -48,6 +48,10 @@ public:
 
     std::map<std::string,std::string> GetAllKV();
 
+    std::pair<uint64_t,uint64_t> GetOps();
+
+    int GetServerSize();
+
     // std::vector<std::string> GetAllKey();
 
     // Data erase(std::string key);

@@ -27,8 +27,8 @@ static ConfigVar<bool>::ptr g_is_prepare_vote_run = Config::Lookup<bool>("is_pre
 static ConfigVar<int>::ptr g_prepare_try_vote_count = Config::Lookup<int>("prepare_try_vote_count",5,"prepare_try_vote_count");
 
 bool Raft_Server::isUptoMe(int index,int term) {
-        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "currentTerm "<< log.back().term <<",term "<<term;
-        STAR_LOG_DEBUG(STAR_LOG_ROOT()) <<"currtentIndex "<< log.back().index <<",index "<<index; 
+        // STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "currentTerm "<< log.back().term <<",term "<<term;
+        // STAR_LOG_DEBUG(STAR_LOG_ROOT()) <<"currtentIndex "<< log.back().index <<",index "<<index; 
         return term > log.back().term || (term == log.back().term && index >= log.back().index);
 }
 
@@ -37,8 +37,8 @@ static int GetRandomNumber(){
         struct timespec p = {0,0};
         clock_gettime(a,&p);
         srand((unsigned)p.tv_nsec);
-        int ret = rand();
-        STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "rand number is " << ret;
+        // int ret = rand();
+        // STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "rand number is " << ret;
         return rand();
 }
 
@@ -68,7 +68,7 @@ Raft_Server::Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc g
         recover();
         if(log.size() == 0)
                 log.push_back(LogEntry{0,0,""});
-
+        lastApplied = commitIndex;
         for(size_t i=0;i<g_raft_servers->getValue().size();++i){
                 if(g_raft_servers->getValue()[i]==me)
                         id = i;
@@ -185,12 +185,12 @@ void Raft_Server::update(){
                  },true);
                 if(!lease){
                         lease = IOManager::GetThis()->addTimer(g_heartbeat_time->getValue()-g_heartbeat_time->getValue()/10,[this](){
-                                STAR_LOG_INFO(STAR_LOG_ROOT()) << "lease_time was false";
+                                // STAR_LOG_INFO(STAR_LOG_ROOT()) << "lease_time was false";
                                 lease_time = false;
                         },true);
                 }
                 lease->reset(g_heartbeat_time->getValue()-g_heartbeat_time->getValue()/10,[this](){
-                        STAR_LOG_INFO(STAR_LOG_ROOT()) << "lease_time was false";
+                        // STAR_LOG_INFO(STAR_LOG_ROOT()) << "lease_time was false";
                         lease_time = false;
                 },true);
                 

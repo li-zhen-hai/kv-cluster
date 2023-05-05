@@ -61,6 +61,8 @@ public:
 
     std::map<std::string,std::string> GetAllKV();
 
+    std::pair<uint64_t,uint64_t> GetOps();
+
     //uint64_t GetMaxVersion();
 
 private:
@@ -100,6 +102,9 @@ private:
 
     //int m_seqid;
     std::atomic<uint64_t> m_seqid;
+
+    std::atomic<uint64_t> reads;
+    std::atomic<uint64_t> writes;
 
     //  
     bool is_create_snapshot_run = false;

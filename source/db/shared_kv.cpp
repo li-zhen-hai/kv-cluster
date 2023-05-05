@@ -31,11 +31,13 @@ void shared_kv::start(star::Address::ptr addr){
     auto func2 = std::function<std::string(std::string)>(std::bind(&shared_kv::get,this,std::placeholders::_1));
     auto func3 = std::function<bool(std::vector<std::string>,std::vector<std::string>)>(std::bind(&shared_kv::atomic_set,this,std::placeholders::_1,std::placeholders::_2));
     auto func4 = std::function<std::map<std::string,std::string>()>(std::bind(&shared_kv::GetAllKV,this));
+    auto func5 = std::function<std::map<int,std::vector<std::string>>()>(std::bind(&shared_kv::GetCluster,this));
 
     m_server->registerMethod("set",func1);
     m_server->registerMethod("get",func2);
     m_server->registerMethod("atomic_set",func3);
     m_server->registerMethod("GetAllKV",func4);
+    m_server->registerMethod("GetCluster",func5);
 
     m_server->setName("SharedKv");
     while(!m_server->bind(addr)){
@@ -197,6 +199,19 @@ std::map<std::string,std::string> shared_kv::GetAllKV(){
         }
         for(auto it:tmp)
             ret[it.first] = it.second;
+    }
+    return ret;
+}
+
+std::map<int,std::vector<std::string>> shared_kv::GetCluster(){
+    std::map<int,std::vector<std::string>> ret;
+    for(int i=0;i<(int)(m_sessions.size());++i){
+        ret[i].push_back(std::to_string(m_sessions[i]->GetServerSize()));
+        std::pair<uint64_t,uint64_t> tmp = m_sessions[i]->GetOps();
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "ops read "<<tmp.first<<", write "<<tmp.second;
+        ret[i].push_back(std::to_string(tmp.first));
+        ret[i].push_back(std::to_string(tmp.second));
+        ret[i].push_back(std::to_string(m_sessions[i]->GetAllKV().size()));
     }
     return ret;
 }
