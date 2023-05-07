@@ -6,6 +6,8 @@
 static star::ConfigVar<std::vector<std::string>>::ptr g_raft_servers =
         star::Config::Lookup<std::vector<std::string>>("kv_server",{},"server");
 
+static star::ConfigVar<bool>::ptr line_read = star::Config::Lookup<bool>("line_read",true,"line_read");
+
 namespace star{
 
 kv_client::kv_client()
@@ -153,6 +155,24 @@ std::string kv_client::get(const std::string& key){
     std::shared_ptr<int> flag(nullptr,[this](int*){
         (this->calls)--;
     });
+
+    if(!line_read->getValue()){
+        int k = rand()%(int)(m_servers.size());
+        if(!m_servers[k]->isConnected()){
+            go [this,k] {
+                star::rpc::RpcClient::ptr new_client(new star::rpc::RpcClient());
+                if(new_client->connect(addrs[k])){
+                        m_servers[k]=new_client;
+                }
+            };
+        }
+        auto res = m_servers[k]->call<std::string>("get",key);
+        if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
+            if(res.getVal() != "")
+                return res.getVal();
+        }
+    }
+
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
             go [this,i] {
@@ -402,6 +422,7 @@ std::pair<uint64_t,uint64_t> kv_client::GetOps(){
     std::shared_ptr<int> flag(nullptr,[this](int*){
         (this->calls)--;
     });
+    uint64_t reads=0,writes=0;
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
             go [this,i] {
@@ -418,11 +439,13 @@ std::pair<uint64_t,uint64_t> kv_client::GetOps(){
         }
         auto res = m_servers[i]->call<std::pair<uint64_t,uint64_t>>("GetOps");
         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
-            STAR_LOG_INFO(STAR_LOG_ROOT()) << "kv-client report successful!"; 
-            return res.getVal();
+            //STAR_LOG_INFO(STAR_LOG_ROOT()) << "kv-client report successful!"; 
+            //return res.getVal();
+            reads += res.getVal().first;
+            writes += res.getVal().second;
         }
     }
-    return {};
+    return {reads,writes};
 }
 
 bool kv_client::clean(){

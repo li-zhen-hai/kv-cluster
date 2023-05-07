@@ -19,6 +19,8 @@ static Logger::ptr g_logger = STAR_LOG_NAME("KV-Server");
 
 static ConfigVar<std::string>::ptr snapshot_file_name = Config::Lookup<std::string>("snapshot_file_name","./kv-snapshot","snapshot_file_name");
 
+static star::ConfigVar<bool>::ptr line_read = star::Config::Lookup<bool>("line_read",true,"line_read");
+
 kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlogsize,bool async_log)
     :m_chan(Channel<LogEntry>(capacity))
     ,r_server(nullptr)
@@ -236,7 +238,7 @@ bool kv_server::set(std::string key,std::string value,uint64_t version){
 
 std::string kv_server::get(std::string key){
     
-    if(r_server->getState() != Raft_Server::State::Leader_State)
+    if(r_server->getState() != Raft_Server::State::Leader_State && line_read->getValue())
         throw std::logic_error("Not Leader");
     reads++;
     std::string value;
@@ -796,9 +798,9 @@ std::map<std::string,std::string> kv_server::GetAllKV(){
 }
 
 std::pair<uint64_t,uint64_t> kv_server::GetOps(){
-    if(r_server->getState() != Raft_Server::State::Leader_State)
-        throw std::logic_error("Not Leader");
-    STAR_LOG_INFO(STAR_LOG_ROOT()) << "read "<< reads <<",write "<< writes;
+    // if(r_server->getState() != Raft_Server::State::Leader_State)
+    //     throw std::logic_error("Not Leader");
+    // STAR_LOG_INFO(STAR_LOG_ROOT()) << "read "<< reads <<",write "<< writes;
     return {reads,writes};
 }
 

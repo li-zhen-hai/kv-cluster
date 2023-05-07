@@ -14,6 +14,7 @@ kv_server:
 #   - 127.0.0.1:7001
 #   - 127.0.0.1:7002
 #   - 127.0.0.1:7003
-g_heartbeat_time: 1000
-g_rand_time: 1500
+g_heartbeat_time: 1500
+g_rand_time: 3000
+line_read: true
 zk_server: 127.0.0.1:21811,127.0.0.1:21812,127.0.0.1:21813

@@ -67,7 +67,26 @@ public:
     int addserver(std::vector<std::string> ips);
 
     /**
-     * @brief 服务开启前删除raft集群
+     * @brief 制定Group添加part
+     * @param id Group编号
+     * @param pos part位置
+     * @return bool 添加结果
+     */
+    bool addpart(int id,int pos);
+
+
+    bool delpart(int id,int pos);
+
+    /**
+     * @brief 删除指定的Group
+     * 
+     * @param id Group编号
+     * @return bool 删除结果 
+     */
+    bool DelGroup(int id);
+
+    /**
+     * @brief 删除指定pos
      * @param pos 集群连接的句柄
      * @return true 删除成功
      * @return false 删除失败
