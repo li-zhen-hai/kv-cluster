@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/all.css">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <script type="text/javascript" src="js/cluster.js"></script>
 
     <script type="text/javascript">
         /*获取到Url里面的参数*/
@@ -43,9 +44,13 @@
                 <div class="headerTitle">
                     <div class="headerLine">Group详情</div>
                 </div>
+                <div class="headerButton">
+                    <button class="addPartButton">新增分区</button>
+                    <button class="deletePartButton">删除分区</button>
+                </div>
             </div>
             <div class="container">
-                <table id="containerTable">
+                <table id="containerTable1">
                     <thead class="tableHeaher">
                     <tr>
                         <th>序号</th>
@@ -67,9 +72,9 @@
                                     {
                                         // alert(data.data[i].id)
                                         var tr
-                                        tr='<td>'+data.data[i].id+'</td>'+'<td>'+data.data[i].state+'</td>'+'<td>'+data.data[i].raft+'</td>'+'<td>'
+                                        tr='<td>'+data.data[i].id+'</td>'+'<td>'+data.data[i].state+'</td>'+'<td>'+data.data[i].raft+'</td>'
                                         // tr=tr+'<td>'+'<a href="cluster?&id='+data.data[i].id+'">详情</td>'
-                                        $("#containerTable").append('<tr class="trHover">'+tr+'</tr>')
+                                        $("#containerTable1").append('<tr class="trHover">'+tr+'</tr>')
                                     }
                                 }
                             })
@@ -77,7 +82,156 @@
                     </script>
                     </tbody>
                 </table>
+                <table id="containerTable2">
+                    <thead class="tableHeaher">
+                    <tr>
+                        <th>序号</th>
+                        <th>hash点</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tdata" class="tableLine">
+                    <script>
+                        $(function(){
+                            $.ajax({
+                                url:'GetClusterHash?id='+clusterid,
+                                type:'get',
+                                dataType:'json',
+                                success:function(data){
+                                    //alert(data.data[2].id)
+                                    // alert(clusterid)
+                                    for(i in data.data)
+                                    {
+                                        alert(data.data[i].id)
+                                        alert(data.data[i].hash)
+                                        var tr
+                                        tr='<td>'+data.data[i].id+'</td>'+'<td>'+data.data[i].hash+'</td>'
+                                        // tr=tr+'<td>'+'<a href="cluster?&id='+data.data[i].id+'">详情</td>'
+                                        $("#containerTable2").append('<tr class="trHover">'+tr+'</tr>')
+                                    }
+                                }
+                            })
+                        })
+                    </script>
+                    </tbody>
+                </table>
+                <div class="modal addpartfade" id="addpartmodal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <i>X</i>
+                                <h4>新增分区</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    分区点：<input type="text" id="add_pos"/>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="pageInfoBox"></div>
+                                <button class="addPartButton_ok">确定</button>
+                                <button class="addPartButton_no">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal deletepartfade" id="deletepartmodal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <i>X</i>
+                                <h4>删除分区</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    分区点：<input type="text" id="delete_pos">
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="pageInfoBox"></div>
+                                <button class="deletePartButton_ok">确定</button>
+                                <button class="deletePartButton_no">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <script type="text/javascript">
+                $(function(){
+
+                    var arrAdd=[]
+                    $(document).on("click",".addPartButton",function(){
+                        $(".addpartfade").fadeIn(0)
+                    })
+                    //addArray
+                    $(document).on("click",".addPartButton_ok",function(){
+                        $(".addpartfade").fadeOut(0)
+                        var pos=document.getElementById("add_pos").value;
+                        //alert(ips)
+                        var url = "/addPart?&id="+clusterid+"&pos="+pos;
+                        alert(url)
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST",url,true);
+                        xhr.onreadystatechange = function() {
+                            if(xhr.readyState === 4 && xhr.status === 200){
+                                var ret = xhr.responseText;
+                                if(ret === key){
+                                    alert("Group add sucess,please refresh the page");
+                                }else{
+                                    alert("Group add fail,please wait and try again");
+                                }
+                                window.location.reload();
+                            }
+                        };
+                        xhr.send();
+                    })
+
+                    $(document).on("click",".addPartutton_no",function(){
+                        $(".addpartfade").fadeOut(0)
+                    })
+
+                    $(document).on("click",".modal-header i",function(){
+                        $(".addpartfade").fadeOut(0)
+                    })
+
+
+                    // delete
+                    var del=[]
+                    $(document).on("click",".deletePartButton",function(){
+                        $(".deletepartfade").fadeIn(0)
+                    })
+                    $(document).on("click",".deletePartButton_ok",function(){
+                        $(".deletepartfade").fadeOut(0)
+                        var pos=document.getElementById("delete_pos").value;
+                        //alert(id)
+                        var url = "/delPart?&id="+clusterid+"&pos="+pos;
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST",url,true);
+                        xhr.onreadystatechange = function() {
+                            if(xhr.readyState === 4 && xhr.status === 200){
+                                var ret = xhr.responseText;
+                                if(ret === key){
+                                    alert("Group add sucess,please refresh the page");
+                                }else{
+                                    alert("Group add fail,please wait and try again");
+                                }
+                                window.location.reload();
+                            }
+                        };
+                        xhr.send();
+                    })
+
+                    $(document).on("click",".deletePartButton_no",function(){
+                        $(".deletepartfade").fadeOut(0)
+                    })
+                    $(document).on("click",".modal-header i",function(){
+                        $(".deletepartfade").fadeOut(0)
+                    })
+                });
+            </script>
+
         </div>
 
         

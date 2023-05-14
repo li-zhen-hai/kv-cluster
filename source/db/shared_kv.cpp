@@ -25,7 +25,7 @@ void shared_kv::start(star::Address::ptr addr){
     is_start = true;
     if(m_sessions.size() == 0) {
         STAR_LOG_FATAL(STAR_LOG_ROOT()) << "Not Server,please first call addserver to add server!";
-        return ;
+        // return ;
     }
     auto func1 = std::function<bool(std::string,std::string,bool)>(std::bind(&shared_kv::set,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3));
     auto func2 = std::function<std::string(std::string)>(std::bind(&shared_kv::get,this,std::placeholders::_1));
@@ -36,6 +36,8 @@ void shared_kv::start(star::Address::ptr addr){
     auto func7 = std::function<int(std::vector<std::string>)>(std::bind(&shared_kv::addserver,this,std::placeholders::_1));
     auto func8 = std::function<bool(int,int)>(std::bind(&shared_kv::addpart,this,std::placeholders::_1,std::placeholders::_2));
     auto func9 = std::function<bool(int)>(std::bind(&shared_kv::DelGroup,this,std::placeholders::_1));
+    auto func10 = std::function<bool(int,int)>(std::bind(&shared_kv::delpart,this,std::placeholders::_1,std::placeholders::_2));
+    auto func11 = std::function<std::vector<std::string>(int)>(std::bind(&shared_kv::GetClusterHash,this,std::placeholders::_1));
 
 
     m_server->registerMethod("set",func1);
@@ -47,6 +49,8 @@ void shared_kv::start(star::Address::ptr addr){
     m_server->registerMethod("AddGroup",func7);
     m_server->registerMethod("AddPart",func8);
     m_server->registerMethod("DelGroup",func9);
+    m_server->registerMethod("DelPart",func10);
+    m_server->registerMethod("GetClusterHash",func11);
 
 
     m_server->setName("SharedKv");
@@ -73,39 +77,60 @@ int shared_kv::addserver(std::vector<std::string> ips){
         MutexType::Lock lock(m_mutex);
         pos = m_sessions.size();
         m_sessions.push_back(session);
-        partition p{hash,pos};
-        points.push_back(p);
         
         std::sort(points.begin(),points.end());
     }
-    if(is_start) {
-        kv_client::ptr next = GetClient(hash+1);
-
-        auto fun = [session,next] () {
-            auto shot = session->GetSnapshot();
-            next->ApplySnapshot(shot);
-        };
-        fun();
-        IOManager::GetThis()->addTimer(3000,fun);
-    }
-    return (int)pos;
+    return addpart(hash,pos);
 }
 
 bool shared_kv::addpart(int id,int pos){
-    partition p{(unsigned int)pos,(size_t)id};
-    {
-        MutexType::Lock lock(m_mutex);
-        points.push_back(p);
+    partition p{(unsigned int)id,-1};
+    if(points.size() == 0){
+        {
+            MutexType::Lock lock(m_mutex);
+            p.pos = pos;
+            points.push_back(p);
+        }
+        return true;
     }
     if(is_start) {
-        kv_client::ptr next = GetClient(pos+1);
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "addpart run!";
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "id "<<id << ",pos "<<pos;
+        kv_client::ptr next = GetClient(id);
 
-        auto fun = [this,id,next] () {
-            auto shot = m_sessions[id]->GetSnapshot();
-            next->ApplySnapshot(shot);
-        };
-        fun();
-        IOManager::GetThis()->addTimer(3000,fun);
+        for(auto p : points) {
+            STAR_LOG_INFO(STAR_LOG_ROOT()) << "p.pos "<<p.pos << ",p.hash "<<p.hash;  
+        }
+
+        auto shot = next->GetSnapshot();
+        {
+            MutexType::Lock lock(m_mutex);
+            points.push_back(p);
+            std::sort(points.begin(),points.end());
+        }
+        m_sessions[pos]->ApplySnapshot(shot);
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "first apply end!";
+        for(auto p : points) {
+            STAR_LOG_INFO(STAR_LOG_ROOT()) << "p.pos "<<p.pos << ",p.hash "<<p.hash;  
+        }
+        sleep(3);
+        shot = next->GetSnapshot();
+        {
+            MutexType::Lock lock(m_mutex);
+            for(auto& p : points) {
+                //STAR_LOG_INFO(STAR_LOG_ROOT()) << "p.hash "<<p.hash << ",id "<<id;
+                if((int)p.hash == id){
+                    p.pos = pos;
+                    break;
+                }
+            }
+            std::sort(points.begin(),points.end());
+        }
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "addpart end!";
+        for(auto p : points) {
+            STAR_LOG_INFO(STAR_LOG_ROOT()) << p.pos <<" " << p.hash;
+        }
+        m_sessions[pos]->ApplySnapshot(shot);
     }
     return true;
 }
@@ -113,53 +138,73 @@ bool shared_kv::addpart(int id,int pos){
 bool shared_kv::delpart(int id,int pos){
     partition p;
     for(auto it : points){
-        if(it.pos == (unsigned int)id && (int)it.hash==pos)
+        if(it.pos == id && (int)it.hash==pos)
             p = it;
     }
-    if(p.pos != (unsigned int)id || (int)p.hash != pos)
+    if(p.pos != id || (int)p.hash != pos)
         return false;
     return delserver(p.hash);
 }
 
 bool shared_kv::DelGroup(int id){
+    STAR_LOG_INFO(STAR_LOG_ROOT()) << "DelGroup run";
     std::vector<partition> re;
     for(auto it : points) {
-        if(it.pos == (unsigned int)id)
+        if(it.pos == id)
             re.push_back(it);
     }
     for(auto it: re){
         if(!delserver(it.hash))
             return false;
     }
+    {
+        MutexType::Lock lock(m_mutex);
+        m_sessions.erase(m_sessions.begin()+id);
+    }
+    STAR_LOG_INFO(STAR_LOG_ROOT()) << "DelGroup successful!";
     return true;
 }
 
 bool shared_kv::delserver(int pos){
-    auto it = points.begin();
-    unsigned int hash=0;
-    bool flag = false;
-    while(it != points.end()) {
-        if((int)it->pos == pos) {
-            hash = it->hash;
-            it = points.erase(it);
-            flag = true;
-        }else
-            it++;
+    int next = -1;
+    for(auto it : points){
+        if((int)it.hash > pos) {
+            MutexType::Lock lock(m_mutex);
+            next = it.pos;
+            it.pos = -1;
+        }
     }
-    if(!flag)
-        return flag;
-    std::sort(points.begin(),points.end());
-    kv_client::ptr tmp = m_sessions[pos];
-    kv_client::ptr next = GetClient(hash);
-    if(is_start) {
-        kv_client::ptr next = GetClient(hash+1);
-
-        auto fun = [tmp,next] () {
-            auto shot = tmp->GetSnapshot();
-            next->ApplySnapshot(shot);
-        };
-        fun();
-        IOManager::GetThis()->addTimer(3000,fun);
+    if(next == -1 && points.size() == 1) {
+        points.clear();
+        return true;
+    }
+    if(next == -1)
+        next = 0;
+    int now = -1;
+    for(auto it= points.begin();it!=points.end();it++){
+        if((int)it->hash == pos){
+            now = it->pos;
+            {
+                MutexType::Lock lock(m_mutex);
+                points.erase(it);
+            }
+            break;
+        }
+    }
+    if(now == -1)
+        return false;
+    auto snap = m_sessions[now]->GetSnapshot();
+    m_sessions[next]->ApplySnapshot(snap);
+    sleep(3);
+    snap = m_sessions[now]->GetSnapshot();
+    m_sessions[next]->ApplySnapshot(snap);
+    {
+        for(auto& it : points){
+            if((int)it.hash > pos ) {
+                MutexType::Lock lock(m_mutex);
+                it.pos = next;
+            }
+        }
     }
     return true;
 }
@@ -277,6 +322,16 @@ std::map<int,std::vector<std::string>> shared_kv::GetCluster(int id){
     return ret;
 }
 
+std::vector<std::string> shared_kv::GetClusterHash(int id){
+    std::vector<std::string> ret;
+    for(auto p : points){
+        if((int)p.pos == id){
+            ret.push_back(std::to_string(p.hash));
+        }
+    }
+    return ret;
+}
+
 void shared_kv::close(){
     is_stop = true;
     for(auto session : m_sessions)
@@ -328,8 +383,11 @@ unsigned int shared_kv::murMurHash(const void *key, int len)
 
 kv_client::ptr shared_kv::GetClient(unsigned int hash_){
     for(auto p : points)
-        if(p.hash > hash_)
+        if(p.hash > hash_){
+            if(p.pos == -1)
+                return nullptr;
             return m_sessions[p.pos];
+        }
     return m_sessions[points[0].pos];
 }
 

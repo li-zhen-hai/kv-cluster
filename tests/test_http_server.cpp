@@ -47,6 +47,103 @@ int main(){
             return 0;
         });
 
+        server->getServletDispatch()->addServlet("/addGroup",[](star::http::HttpRequest::ptr request
+                , star::http::HttpResponse::ptr response
+                , star::http::HttpSession::ptr session) ->uint32_t {
+            STAR_LOG_INFO(g_logger) << "addGroup run!";
+            std::string ips = request->getParamAs<std::string>("ips");
+            star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
+            star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
+            client->setTimeout(500);
+            if(!client->connect(address)){
+                response->setBody("!"+ips);
+                return 0;
+            }
+            std::vector<std::string> vec;
+            int pos = 0;
+            for(int i=0;i<(int)ips.size();++i){
+                if(ips[i] == ';'){
+                    vec.push_back(ips.substr(pos,i-pos));
+                    pos = i+1;
+                }
+            }
+            if(pos != (int)ips.size())
+                vec.push_back(ips.substr(pos));
+            // for(int i=0;i<(int)vec.size();++i){
+            //     STAR_LOG_DEBUG(g_logger) << " " <<vec[i];
+            // }
+            auto res = client->call<bool>("AddGroup",vec);
+            if(res.getCode() == star::rpc::RPC_SUCCESS && res.getVal())
+                response->setBody(ips);
+            else
+                response->setBody("!"+ips);
+            return 0;
+        });
+
+        server->getServletDispatch()->addServlet("/delGroup",[](star::http::HttpRequest::ptr request
+                , star::http::HttpResponse::ptr response
+                , star::http::HttpSession::ptr session) ->uint32_t {
+            STAR_LOG_INFO(g_logger) << "delGroup run!";
+            int id = request->getParamAs<int>("id");
+            // STAR_LOG_INFO(g_logger) << id;
+            star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
+            star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
+            client->setTimeout(500);
+            if(!client->connect(address)){
+                response->setBody("!"+id);
+                return 0;
+            }
+            auto res = client->call<bool>("DelGroup",id);
+            if(res.getCode() == star::rpc::RPC_SUCCESS && res.getVal())
+                response->setBody(std::to_string(id));
+            else
+                response->setBody("!"+std::to_string(id));
+            return 0;
+        });
+
+        server->getServletDispatch()->addServlet("/addPart",[](star::http::HttpRequest::ptr request
+                , star::http::HttpResponse::ptr response
+                , star::http::HttpSession::ptr session) ->uint32_t {
+            STAR_LOG_INFO(g_logger) << "addPart run!";
+            int id = request->getParamAs<int>("id");
+            int pos = request->getParamAs<int>("pos");
+            STAR_LOG_INFO(STAR_LOG_ROOT()) << id <<" " << pos;
+            star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
+            star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
+            client->setTimeout(500);
+            if(!client->connect(address)){
+                response->setBody("!"+id);
+                return 0;
+            }
+            auto res = client->call<bool>("AddPart",pos,id);
+            if(res.getCode() == star::rpc::RPC_SUCCESS && res.getVal())
+                response->setBody(std::to_string(id));
+            else
+                response->setBody("!"+std::to_string(id));
+            return 0;
+        });
+
+        server->getServletDispatch()->addServlet("/delPart",[](star::http::HttpRequest::ptr request
+                , star::http::HttpResponse::ptr response
+                , star::http::HttpSession::ptr session) ->uint32_t {
+            STAR_LOG_INFO(g_logger) << "delPart run!";
+            int id = request->getParamAs<int>("id");
+            int pos = request->getParamAs<int>("pos");
+            star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
+            star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
+            client->setTimeout(500);
+            if(!client->connect(address)){
+                response->setBody("!"+id);
+                return 0;
+            }
+            auto res = client->call<bool>("DelPart",id,pos);
+            if(res.getCode() == star::rpc::RPC_SUCCESS && res.getVal())
+                response->setBody(std::to_string(id));
+            else
+                response->setBody("!"+std::to_string(id));
+            return 0;
+        });
+
         server->getServletDispatch()->addServlet("/getAllkv",[](star::http::HttpRequest::ptr request
                 , star::http::HttpResponse::ptr response
                 , star::http::HttpSession::ptr session) ->uint32_t {
@@ -130,6 +227,31 @@ int main(){
                 data[i]["id"] = i;
                 data[i]["state"] = tmp[i][0];
                 data[i]["raft"] = tmp[i][1];
+            }
+            json["data"]=data;
+            response->setJson(json);
+            return 0;
+        });
+
+        server->getServletDispatch()->addServlet("/GetClusterHash",[](star::http::HttpRequest::ptr request
+                , star::http::HttpResponse::ptr response
+                , star::http::HttpSession::ptr session) ->uint32_t {
+            STAR_LOG_INFO(g_logger) << "GetClusterHash run!";
+            int id = request->getParamAs<int>("id");
+            star::rpc::RpcClient::ptr client(new star::rpc::RpcClient());
+            star::Address::ptr address = star::Address::LookupAny("127.0.0.1:9999");
+            client->connect(address);
+            auto res = client->call<std::vector<std::string>>("GetClusterHash",id);
+            std::vector<std::string> tmp;
+            if(res.getCode() == star::rpc::RPC_SUCCESS)
+                tmp = res.getVal();
+            star::Json json;
+            std::vector<star::Json> data((int)tmp.size());
+            for(int i=0;i<(int)tmp.size();++i){
+                // STAR_LOG_INFO(STAR_LOG_ROOT()) << "GetCluster : id "<<i<<",state "<<tmp[i][0] << ",raft "<<tmp[i][1];
+                STAR_LOG_INFO(STAR_LOG_ROOT()) << tmp[i];
+                data[i]["id"] = i;
+                data[i]["hash"] = tmp[i];
             }
             json["data"]=data;
             response->setJson(json);

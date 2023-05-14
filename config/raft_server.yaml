@@ -16,5 +16,9 @@ kv_server:
 #   - 127.0.0.1:7003
 g_heartbeat_time: 1500
 g_rand_time: 3000
+g_log_maxsize: 100
 line_read: true
+g_prepare_vote: true
+g_leader_lease: false
+g_check_qurom: true
 zk_server: 127.0.0.1:21811,127.0.0.1:21812,127.0.0.1:21813

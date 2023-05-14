@@ -39,7 +39,7 @@ public:
      */
     struct partition {
         unsigned int hash;
-        size_t pos;
+        int pos;
         bool operator < (const partition& thr) const;
     };
 
@@ -125,6 +125,8 @@ public:
     std::map<int,std::vector<std::string>> GetAllCluster();
 
     std::map<int,std::vector<std::string>> GetCluster(int id);
+
+    std::vector<std::string> GetClusterHash(int id);
 
     void close();
 

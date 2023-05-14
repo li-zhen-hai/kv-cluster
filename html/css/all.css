@@ -18,7 +18,11 @@
     width: 1200px;
     height: 56px;
 }
-
+.headerButton{
+    width: 205px;
+    height: 40px;
+    line-height: 40px;
+}
 .container{
     width: 1200px;
     height: 455px;
@@ -38,7 +42,73 @@
 /*    float: left;*/
 /*}*/
 /**/
+.pageButton{
+    width: 190px;
+    height: 79px;
+    line-height: 79px;
+    float: right;
 
+}
+.addButton{
+    width: 93px;
+    height: 38px;
+    background-color: #5cb85c;
+    border: 1px solid #000000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.deleteButton{
+    width: 93px;
+    height: 38px;
+    background-color:  #d9534f ;
+    border: 1px solid #000000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.addPartButton{
+    width: 93px;
+    height: 38px;
+    background-color: #5cb85c;
+    border: 1px solid #000000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.deletePartButton{
+    width: 93px;
+    height: 38px;
+    background-color:  #d9534f ;
+    border: 1px solid #000000;
+    color: #fff;
+    cursor: pointer;
+}
+
+#prePageButton{
+    width: 88px;
+    height: 38px;
+    background-color: #5cb85c;
+    border: 1px solid #000000;
+    color: #fff;
+    cursor: pointer;
+}
+#nextPageButton{
+    width: 88px;
+    height: 38px;
+    background-color: #d9534f;
+    border: 1px solid #000000;
+    margin-left: 9px;
+    color: #fff;
+    cursor: pointer;
+}
+.viewInf ,.updateInf{
+    color: #ff0000;
+    cursor: pointer;
+}
+.updateInf{
+    margin-left: 9px;
+}
 .container table{
     border-collapse: collapse;
     width: 100%;
@@ -49,13 +119,9 @@
 .tableHeaher{
     height: 55px;
     background-color: #dadee1;
-    font-size: 20px;
-}
-.tableLine{
-    font-size: 24px;
 }
 tr.trHover:hover{
-    background-color: palegreen;
+    background-color: red;
 }
 
 
@@ -77,6 +143,64 @@ td{
 }
 
 
+#addmodal{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#deletemodal{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#addpartmodal{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#deletepartmodal{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#viewmodal{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+#movemodal{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
 .modal-dialog{
     position: relative;
     width: 500px;
@@ -108,7 +232,7 @@ td{
     text-align: center;
 }
 .modal-body input{
-    width: 202px;
+    width: 404px;
     border: 1px solid #a9a9a9;
     outline: none;
     margin: 10px;
@@ -118,8 +242,116 @@ td{
     text-align: right;
     border-top: 1px solid #e5e5e5;
 }
-.main{
-	width: 1229px;
-	height: 645px;
-	/* margin: auto; */
+.addButton_ok{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #5cb85c;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+.addButton_no{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #fff;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+
+.deleteButton_ok{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #5cb85c;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+.deleteButton_no{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #fff;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+
+.addPartButton_ok{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #5cb85c;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+.addPartButton_no{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #fff;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+
+.deletePartButton_ok{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #5cb85c;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+.deletePartButton_no{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #fff;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+
+.pageInformation{
+    width: 226px;
+    height: 16px;
+    padding-top: 29px;
+    font-size: 15px;
+    line-height: 16px;
+    float: left;
+}
+
+.updatabtn_ok{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #fff;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
+}
+.updatabtn_no{
+    width: 93px;
+    height: 38px;
+    border-radius: 4px;
+    background: #fff;
+    color: #808080;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #aeaeae;
 }

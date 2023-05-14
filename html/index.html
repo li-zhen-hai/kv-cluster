@@ -6,6 +6,7 @@
     <title>集群详情</title>
     <link rel="stylesheet" type="text/css" href="css/all.css">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <script type="text/javascript" src="js/cluster.js"></script>
     <!-- <script type="text/javascript" src="js/echarts.js"></script> -->
 
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="external nofollow" > -->
@@ -15,6 +16,10 @@
             <div class="header">
                 <div class="headerTitle">
                     <div class="headerLine">kv-cluster集群</div>
+                </div>
+                <div class="headerButton">
+                    <button class="addButton">新增Group</button>
+                    <button class="deleteButton">删除Group</button>
                 </div>
             </div>
             <div class="container">
@@ -50,6 +55,48 @@
                     </script>
                     </tbody>
                 </table>
+                <div class="modal addfade" id="addmodal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <i>X</i>
+                                <h4>新增Group</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Group的ip地址：<input type="text" placeholder="127.0.0.1:8001;127.0.0.1:8002;127.0.0.1:8003" id="ips"/>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="pageInfoBox"></div>
+                                <button class="addButton_ok">确定</button>
+                                <button class="addButton_no">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal deletefade" id="deletemodal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <i>X</i>
+                                <h4>删除Group</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    序号：<input type="text" id="Group_id">
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="pageInfoBox"></div>
+                                <button class="deleteButton_ok">确定</button>
+                                <button class="deleteButton_no">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         

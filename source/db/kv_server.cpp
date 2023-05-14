@@ -21,7 +21,7 @@ static ConfigVar<std::string>::ptr snapshot_file_name = Config::Lookup<std::stri
 
 static star::ConfigVar<bool>::ptr line_read = star::Config::Lookup<bool>("line_read",true,"line_read");
 
-kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlogsize,bool async_log)
+kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,bool async_log)
     :m_chan(Channel<LogEntry>(capacity))
     ,r_server(nullptr)
     ,m_server(nullptr)
@@ -78,7 +78,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,int maxlo
         sleep(1);
     }
 
-    r_server.reset(new star::Raft_Server(r_ip,m_chan,fun5,fun6,fun11,fun12,maxlogsize,async_log));
+    r_server.reset(new star::Raft_Server(r_ip,m_chan,fun5,fun6,fun11,fun12,async_log));
 }
 
 void kv_server::start(){

@@ -33,7 +33,7 @@ public:
     // using KVSnapshot = std::unordered_map<std::string,std::pair<std::string,uint64_t>>;
     using KVSnapshot = std::map<std::string,std::string>;
 
-    kv_server(std::string m_ip,std::string r_ip,size_t capacity=65535,int maxlogsize=50,bool async_log = false);
+    kv_server(std::string m_ip,std::string r_ip,size_t capacity=65535,bool async_log = false);
 
     void start();
 

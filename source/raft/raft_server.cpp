@@ -22,9 +22,52 @@ static ConfigVar<uint64_t>::ptr g_heartbeat_time = Config::Lookup<uint64_t>("g_h
 
 static ConfigVar<uint64_t>::ptr g_rand_time = Config::Lookup<uint64_t>("g_rand_time",10000,"raft_heartBeat_time");
 
-static ConfigVar<bool>::ptr g_is_prepare_vote_run = Config::Lookup<bool>("is_prepare_vote_run",true,"is_prepare_vote_run");
+static ConfigVar<bool>::ptr g_prepare_vote = Config::Lookup<bool>("g_prepare_vote",false,"g_prepare_vote");
 
 static ConfigVar<int>::ptr g_prepare_try_vote_count = Config::Lookup<int>("prepare_try_vote_count",5,"prepare_try_vote_count");
+
+static ConfigVar<int>::ptr g_log_maxsize = Config::Lookup<int>("g_log_maxsize",50,"g_log_maxsize");
+
+static ConfigVar<bool>::ptr g_leader_lease = Config::Lookup<bool>("g_leader_lease",false,"g_leader_lease");
+
+static ConfigVar<bool>::ptr g_check_qurom = Config::Lookup<bool>("g_check_qurom",false,"g_check_qurom");
+
+struct _RaftServerIniter{
+    _RaftServerIniter(){
+        //star::Config::LoadFromFile("../../config/service.yaml");
+        g_heartbeat_time->addListener([](const uint64_t& old_val, const uint64_t& new_val){
+                STAR_LOG_INFO(g_logger) << "Raft server heartbeat timeout changed from "
+                                    << old_val << " to " << new_val;
+        });
+        g_rand_time->addListener([](const uint64_t& old_val,const uint64_t& new_val){
+                STAR_LOG_INFO(g_logger) << "Raft server rand maxtime changed from "
+                                    << old_val << " to " << new_val;
+        });
+        g_prepare_vote->addListener([](const bool& old_val,const bool& new_val){
+                if(new_val == false) {
+                        STAR_LOG_INFO(g_logger) << "PrepareVote not open!";
+                }else{
+                        STAR_LOG_INFO(g_logger) << "PrepareVote open!";
+                }
+        });
+        g_leader_lease->addListener([](const bool& old_val,const bool& new_val){
+                if(new_val == false){
+                        STAR_LOG_INFO(g_logger) << "Leader Lease not open!";
+                }else{
+                        STAR_LOG_INFO(g_logger) << "Leader Lease open!";
+                }
+        });
+        g_check_qurom->addListener([](const bool& old_val,const bool& new_val){
+                if(new_val == false){
+                        STAR_LOG_INFO(g_logger) << "Check Qurom not open!";
+                }else{
+                        STAR_LOG_INFO(g_logger) << "Check Qurom not open!";
+                }
+        });
+    }
+};
+
+static _RaftServerIniter s_initer;
 
 bool Raft_Server::isUptoMe(int index,int term) {
         // STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "currentTerm "<< log.back().term <<",term "<<term;
@@ -42,7 +85,7 @@ static int GetRandomNumber(){
         return rand();
 }
 
-Raft_Server::Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc get,ApplySnapshotFunc apply,CreateSnapshotFunc create,SnapshotPersisentFunc persisent,int maxlogsize,bool async_log)
+Raft_Server::Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc get,ApplySnapshotFunc apply,CreateSnapshotFunc create,SnapshotPersisentFunc persisent,bool async_log)
         :me(ip)
         ,currentTerm(0)
         ,votedFor(-1)
@@ -53,15 +96,15 @@ Raft_Server::Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc g
         ,voteCount(0)
         ,prepareCount(1)
         ,winPreVote(false)
-        ,maxLogSize(maxlogsize)
+        ,maxLogSize(g_log_maxsize->getValue())
         ,m_chan(chan)
-        ,async_persisent_log_chan(Channel<LogEntry>(4*maxlogsize))
+        ,async_persisent_log_chan(Channel<LogEntry>(4*g_log_maxsize->getValue()))
         ,is_async_log(async_log)
         ,GetSnapshot(get)
         ,ApplySnapshot(apply)
         ,CreateSnapshot(create)
         ,snapshotPersisent(persisent)
-        ,lease_time(false)
+        ,lease_time(g_leader_lease->getValue())
         ,persisent_is_run(false)
         ,prepare_vote_try_count({0}){
 
@@ -142,10 +185,14 @@ void Raft_Server::update(){
                          heartBeat = IOManager::GetThis()->addTimer(g_heartbeat_time->getValue(),[this](){
                                  //go [this] {
                                          //this->update();
-                                        if(GetLiveNode() > (int)servers.size()/2)
+                                        if(g_check_qurom->getValue()){
+                                                if(GetLiveNode() > (int)servers.size()/2)
+                                                        this->boardcastHeartBeat();
+                                                else
+                                                        state = State::Follower_State;
+                                        }else{
                                                 this->boardcastHeartBeat();
-                                        else
-                                                state = State::Follower_State;
+                                        }
                                  //};
                          },true);
                          return ;
@@ -521,7 +568,7 @@ void Raft_Server::boardcastPrepareVote(){
                 STAR_LOG_INFO(STAR_LOG_ROOT()) << "currentTerm is "<< currentTerm;
         }
 
-        if(!g_is_prepare_vote_run->getValue()){
+        if(!g_prepare_vote->getValue()){
                 boardcastRequestVote();
                 return ;
         }

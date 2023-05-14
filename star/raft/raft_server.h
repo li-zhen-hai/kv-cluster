@@ -71,9 +71,8 @@ public:
      * @param[in] get 获取快照的回调
      * @param[in] apply 应用快照的回调
      * @param[in] create 创建快照的回调
-     * @param[in] maxlogsize 日志持久化长度
      */
-    Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc get = nullptr,ApplySnapshotFunc apply = nullptr,CreateSnapshotFunc create = nullptr,SnapshotPersisentFunc persisent = nullptr,int maxlogsize=50,bool async_log = false);
+    Raft_Server(std::string ip,Channel<LogEntry> chan,GetSnapshotFunc get = nullptr,ApplySnapshotFunc apply = nullptr,CreateSnapshotFunc create = nullptr,SnapshotPersisentFunc persisent = nullptr,bool async_log = false);
 
     ~Raft_Server();
 
