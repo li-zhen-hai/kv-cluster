@@ -367,7 +367,8 @@ void Raft_Server::boardcastHeartBeat(){
 
 void Raft_Server::boardcastRequestVote(){
 
-        STAR_LOG_INFO(STAR_LOG_ROOT()) << "boardcastRequestVote";
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "boardcastRequestVote"
+                                       << " currentterm is " << currentTerm;
 
         if(state == State::Candidate_State) {
                 // STAR_LOG_INFO(STAR_LOG_ROOT()) << id <<" begin RequestVote! lastapplied is " << lastApplied 
