@@ -15,7 +15,7 @@ void test_raft_server(int argc,char** argv) {
     // std::string ip="127.0.0.1:8001"; kv_servers->getValue()[0];
     // if(argc>1)
     //     ip = argv[1];
-    star::kv_server ser(kv_servers->getValue()[0],raft_servers->getValue()[0],65535,50,true);
+    star::kv_server ser(kv_servers->getValue()[0],raft_servers->getValue()[0],50,true);
     // STAR_LOG_INFO(STAR_LOG_ROOT()) << g_raft_servers->getValue().size();
     ser.start();
     while(true){

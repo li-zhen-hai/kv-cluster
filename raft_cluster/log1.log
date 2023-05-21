@@ -1,0 +1,121 @@
+2023-05-14 13:07:20	[ INFO	]	[root]	14217	main	0		raft_cluster/raft_server_1.cpp:355	lookup name=raft_server already exist
+[0m2023-05-14 13:07:20	[ INFO	]	[Raft-Server]	14224	main_1	2		source/raft/raft_server.cpp:39	Raft server heartbeat timeout changed from 5000 to 1500
+[0m2023-05-14 13:07:20	[ INFO	]	[Raft-Server]	14224	main_1	2		source/raft/raft_server.cpp:43	Raft server rand maxtime changed from 10000 to 3000
+[0m2023-05-14 13:07:20	[ INFO	]	[Raft-Server]	14224	main_1	2		source/raft/raft_server.cpp:50	PrepareVote open!
+[0m2023-05-14 13:07:20	[ INFO	]	[Raft-Server]	14224	main_1	2		source/raft/raft_server.cpp:64	Check Qurom not open!
+[0m2023-05-14 13:07:20	[ INFO	]	[system]	14224	main_1	2		source/net/tcp_server.cpp:56	Server name=kv-server bind:[socket sock=10 isConnected=0 family=2 type=1 protocol=0 localAddress=127.0.0.1:6001] success
+[0m[31m2023-05-14 13:07:20	[ ERROR	]	[system]	14225	main_2	2		source/net/socket.cpp:153	sock=11 connect(127.0.0.1:8001) error, errno=111 errstr=Connection refused
+[0m[31m2023-05-14 13:07:20	[ ERROR	]	[system]	14223	main_0	2		source/net/socket.cpp:153	sock=11 connect(127.0.0.1:8002) error, errno=111 errstr=Connection refused
+[0m[31m2023-05-14 13:07:20	[ ERROR	]	[system]	14225	main_2	2		source/net/socket.cpp:153	sock=11 connect(127.0.0.1:8003) error, errno=111 errstr=Connection refused
+[0m[34m2023-05-14 13:07:20	[ DEBUG	]	[root]	14223	main_0	6		source/raft/raft_server.cpp:1036	fd 11
+[0m2023-05-14 13:07:20	[ INFO	]	[system]	14225	main_2	2		source/net/tcp_server.cpp:56	Server name=Raft-Server bind:[socket sock=12 isConnected=0 family=2 type=1 protocol=0 localAddress=127.0.0.1:8001] success
+[0m[34m2023-05-14 13:07:20	[ DEBUG	]	[system]	14224	main_1	2		source/net/tcp_server.cpp:75	TcpServer::start()
+[0m[34m2023-05-14 13:07:20	[ DEBUG	]	[system]	14224	main_1	2		source/net/tcp_server.cpp:75	TcpServer::start()
+[0m[34m2023-05-14 13:07:20	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:129	handleClient: [socket sock=13 isConnected=1 family=2 type=1 protocol=0 localAddress=127.0.0.1:8001 remoteAddress=127.0.0.1:60338]
+[0m[34m2023-05-14 13:07:20	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:20	[ DEBUG	]	[system]	14226	main_3	14		source/rpc/rpc_server.cpp:129	handleClient: [socket sock=14 isConnected=1 family=2 type=1 protocol=0 localAddress=127.0.0.1:8001 remoteAddress=127.0.0.1:60354]
+[0m[34m2023-05-14 13:07:20	[ DEBUG	]	[system]	14226	main_3	14		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:23	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:23	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m2023-05-14 13:07:23	[ INFO	]	[root]	14226	main_3	16		source/raft/raft_server.cpp:505	receive requestvote
+[0m2023-05-14 13:07:23	[ INFO	]	[root]	14226	main_3	16		source/raft/raft_server.cpp:506	term is 1 ,currentterm is 0,candidated is 1 me is 0,lastLogIndex is 0 mylastlog index is 0,LastLogTerm is 0mylastlog term is 0,lease_time 0
+[0m[34m2023-05-14 13:07:23	[ DEBUG	]	[root]	14226	main_3	16		source/raft/raft_server.cpp:537	reply 1
+[0m[34m2023-05-14 13:07:23	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:24	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:26	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:27	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:29	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:30	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:32	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:33	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:35	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:36	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:38	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:39	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:41	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:42	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:44	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:45	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:47	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:48	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:50	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:51	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:53	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:54	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:56	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:57	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:07:59	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:00	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:00	[ DEBUG	]	[system]	14225	main_2	18		source/rpc/rpc_server.cpp:183	client:[socket sock=14 isConnected=1 family=2 type=1 protocol=0 localAddress=127.0.0.1:8001 remoteAddress=127.0.0.1:60354] closed
+[0m[34m2023-05-14 13:08:00	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:02	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:03	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:05	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:06	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:08	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:09	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:11	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:129	handleClient: [socket sock=14 isConnected=1 family=2 type=1 protocol=0 localAddress=127.0.0.1:6001 remoteAddress=127.0.0.1:55468]
+[0m[34m2023-05-14 13:08:11	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:11	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:12	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:12	[ DEBUG	]	[system]	14223	main_0	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:12	[ DEBUG	]	[system]	14226	main_3	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:14	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:15	[ DEBUG	]	[system]	14226	main_3	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:15	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:16	[ DEBUG	]	[system]	14226	main_3	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:17	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:18	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:20	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:21	[ DEBUG	]	[system]	14223	main_0	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:21	[ DEBUG	]	[system]	14223	main_0	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:21	[ DEBUG	]	[system]	14225	main_2	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:21	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:22	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:23	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:24	[ DEBUG	]	[system]	14226	main_3	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:24	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:24	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:26	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:26	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:27	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:29	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:30	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:31	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:32	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:33	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:35	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:36	[ DEBUG	]	[system]	14223	main_0	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:36	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:37	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:38	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:39	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:40	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:41	[ DEBUG	]	[system]	14224	main_1	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:41	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:42	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:44	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:45	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:46	[ DEBUG	]	[system]	14225	main_2	22		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:47	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:48	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:50	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:51	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:53	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:54	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:56	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:57	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:08:59	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:00	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:02	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:03	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:05	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:06	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:08	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:09	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:11	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:12	[ DEBUG	]	[system]	14223	main_0	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:14	[ DEBUG	]	[system]	14224	main_1	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:15	[ DEBUG	]	[system]	14225	main_2	12		source/rpc/rpc_server.cpp:180	update heart
+[0m[34m2023-05-14 13:09:17	[ DEBUG	]	[system]	14226	main_3	12		source/rpc/rpc_server.cpp:180	update heart
+[0m

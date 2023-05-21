@@ -367,6 +367,8 @@ void Raft_Server::boardcastHeartBeat(){
 
 void Raft_Server::boardcastRequestVote(){
 
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "boardcastRequestVote";
+
         if(state == State::Candidate_State) {
                 // STAR_LOG_INFO(STAR_LOG_ROOT()) << id <<" begin RequestVote! lastapplied is " << lastApplied 
                 //                                      << " ,commitIndex is " << commitIndex
@@ -563,12 +565,8 @@ void Raft_Server::boardcastPrepareVote(){
                 return ;
         }
 
-        if(state == State::Follower_State) {
-                STAR_LOG_INFO(STAR_LOG_ROOT()) << "boardcastPrepareVote!!!!";
-                STAR_LOG_INFO(STAR_LOG_ROOT()) << "currentTerm is "<< currentTerm;
-        }
-
         if(!g_prepare_vote->getValue()){
+                state = State::Candidate_State;
                 boardcastRequestVote();
                 return ;
         }
@@ -576,6 +574,11 @@ void Raft_Server::boardcastPrepareVote(){
         if(state == State::Candidate_State) {
                 boardcastRequestVote();
                 return ;
+        }
+        
+        if(state == State::Follower_State) {
+                STAR_LOG_INFO(STAR_LOG_ROOT()) << "boardcastPrepareVote!!!!";
+                STAR_LOG_INFO(STAR_LOG_ROOT()) << "currentTerm is "<< currentTerm;
         }
         prepare_vote_try_count++;
         if(prepare_vote_try_count>g_prepare_try_vote_count->getValue()){

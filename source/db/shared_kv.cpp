@@ -76,7 +76,7 @@ int shared_kv::addserver(std::vector<std::string> ips){
     {
         MutexType::Lock lock(m_mutex);
         pos = m_sessions.size();
-        m_sessions.push_back(session);
+        m_sessions[pos] = session;
         
         std::sort(points.begin(),points.end());
     }
@@ -131,6 +131,9 @@ bool shared_kv::addpart(int id,int pos){
             STAR_LOG_INFO(STAR_LOG_ROOT()) << p.pos <<" " << p.hash;
         }
         m_sessions[pos]->ApplySnapshot(shot);
+    }else{
+        p.pos = pos;
+        points.push_back(p);
     }
     return true;
 }
@@ -157,10 +160,7 @@ bool shared_kv::DelGroup(int id){
         if(!delserver(it.hash))
             return false;
     }
-    {
-        MutexType::Lock lock(m_mutex);
-        m_sessions.erase(m_sessions.begin()+id);
-    }
+    m_sessions.erase(id);
     STAR_LOG_INFO(STAR_LOG_ROOT()) << "DelGroup successful!";
     return true;
 }
@@ -300,12 +300,17 @@ std::map<std::string,std::string> shared_kv::GetAllKV(){
 std::map<int,std::vector<std::string>> shared_kv::GetAllCluster(){
     std::map<int,std::vector<std::string>> ret;
     for(int i=0;i<(int)(m_sessions.size());++i){
-        ret[i].push_back(std::to_string(m_sessions[i]->GetServerSize()));
-        std::pair<uint64_t,uint64_t> tmp = m_sessions[i]->GetOps();
-        STAR_LOG_INFO(STAR_LOG_ROOT()) << "ops read "<<tmp.first<<", write "<<tmp.second;
-        ret[i].push_back(std::to_string(tmp.first));
-        ret[i].push_back(std::to_string(tmp.second));
-        ret[i].push_back(std::to_string(m_sessions[i]->GetAllKV().size()));
+        try{
+            ret[i].push_back(std::to_string(m_sessions[i]->GetServerSize()));
+            std::pair<uint64_t,uint64_t> tmp = m_sessions[i]->GetOps();
+            STAR_LOG_INFO(STAR_LOG_ROOT()) << "ops read "<<tmp.first<<", write "<<tmp.second;
+            ret[i].push_back(std::to_string(i));
+            ret[i].push_back(std::to_string(tmp.first));
+            ret[i].push_back(std::to_string(tmp.second));
+            ret[i].push_back(std::to_string(m_sessions[i]->GetAllKV().size()));
+        }catch(...){
+            continue;
+        }
     }
     return ret;
 }
@@ -335,7 +340,7 @@ std::vector<std::string> shared_kv::GetClusterHash(int id){
 void shared_kv::close(){
     is_stop = true;
     for(auto session : m_sessions)
-        session->close();
+        session.second->close();
 }
 
 unsigned int shared_kv::gethash(std::string key){

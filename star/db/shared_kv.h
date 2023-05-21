@@ -164,7 +164,8 @@ private:
     bool auto_reload;
     rpc::RpcServer::ptr m_server;
     hash_function m_hash;
-    std::vector<kv_client::ptr> m_sessions;
+    // std::vector<kv_client::ptr> m_sessions;
+    std::unordered_map<int,kv_client::ptr> m_sessions;
     std::vector<std::atomic<uint64_t>*> loads;
     PartPoint points;
 
