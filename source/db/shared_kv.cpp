@@ -299,19 +299,32 @@ std::map<std::string,std::string> shared_kv::GetAllKV(){
 
 std::map<int,std::vector<std::string>> shared_kv::GetAllCluster(){
     std::map<int,std::vector<std::string>> ret;
-    for(int i=0;i<(int)(m_sessions.size());++i){
-        try{
-            ret[i].push_back(std::to_string(m_sessions[i]->GetServerSize()));
-            std::pair<uint64_t,uint64_t> tmp = m_sessions[i]->GetOps();
-            STAR_LOG_INFO(STAR_LOG_ROOT()) << "ops read "<<tmp.first<<", write "<<tmp.second;
-            ret[i].push_back(std::to_string(i));
-            ret[i].push_back(std::to_string(tmp.first));
-            ret[i].push_back(std::to_string(tmp.second));
-            ret[i].push_back(std::to_string(m_sessions[i]->GetAllKV().size()));
-        }catch(...){
+    for(auto it : m_sessions){
+        if(!it.second.get())
             continue;
-        }
+        ret[it.first].push_back(std::to_string(it.second->GetServerSize()));
+        std::pair<uint64_t,uint64_t> tmp = it.second->GetOps();
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "ops read "<<tmp.first<<", write "<<tmp.second;
+        ret[it.first].push_back(std::to_string(tmp.first));
+        ret[it.first].push_back(std::to_string(tmp.second));
+        ret[it.first].push_back(std::to_string(it.second->GetAllKV().size()));
     }
+
+    // for(int i=0;i<(int)(m_sessions.size());++i){
+    //     try{
+    //         if(!m_sessions[i].get())
+    //             continue;
+    //         ret[i].push_back(std::to_string(m_sessions[i]->GetServerSize()));
+    //         std::pair<uint64_t,uint64_t> tmp = m_sessions[i]->GetOps();
+    //         STAR_LOG_INFO(STAR_LOG_ROOT()) << "ops read "<<tmp.first<<", write "<<tmp.second;
+    //         ret[i].push_back(std::to_string(i));
+    //         ret[i].push_back(std::to_string(tmp.first));
+    //         ret[i].push_back(std::to_string(tmp.second));
+    //         ret[i].push_back(std::to_string(m_sessions[i]->GetAllKV().size()));
+    //     }catch(...){
+    //         continue;
+    //     }
+    // }
     return ret;
 }
 

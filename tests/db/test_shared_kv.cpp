@@ -8,7 +8,7 @@ void test_shared_kv() {
     star::Config::LoadFromFile("../../config/raft_server.yaml");
     star::Config::LoadFromFile("../../config/service.yaml");
     star::shared_kv server;
-    // server.addserver(kv_servers->getValue());
+    server.addserver(kv_servers->getValue());
     // std::vector<std::string> addr = { "127.0.0.1:7001","127.0.0.1:7002","127.0.0.1:7003"};
     // server.addserver(addr);
     server.start("127.0.0.1:9999");

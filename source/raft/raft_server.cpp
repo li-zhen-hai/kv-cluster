@@ -61,7 +61,7 @@ struct _RaftServerIniter{
                 if(new_val == false){
                         STAR_LOG_INFO(g_logger) << "Check Qurom not open!";
                 }else{
-                        STAR_LOG_INFO(g_logger) << "Check Qurom not open!";
+                        STAR_LOG_INFO(g_logger) << "Check Qurom open!";
                 }
         });
     }
@@ -1108,6 +1108,7 @@ int Raft_Server::GetLiveNode(){
                         };
                 }
         }
+        STAR_LOG_INFO(STAR_LOG_ROOT()) << "live node "<<ret;
         return ret;
 }
 

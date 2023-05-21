@@ -280,14 +280,25 @@ int main(){
             if(res.getCode() == star::rpc::RPC_SUCCESS)
                 tmp = res.getVal();
             star::Json json;
-            std::vector<star::Json> data((int)tmp.size());
-            for(int i=0;i<(int)tmp.size();++i){
-                data[i]["id"] = i;
-                data[i]["size"] = tmp[i][0];
-                data[i]["read"] = tmp[i][1];
-                data[i]["write"] = tmp[i][2];
-                data[i]["sum"] = tmp[i][3];
+            std::vector<star::Json> data;
+            for(auto it : tmp){
+                if(it.second.size() != 4)
+                    continue;
+                star::Json q;
+                q["id"] = it.first;
+                q["size"] = it.second[0];
+                q["read"] = it.second[1];
+                q["write"] = it.second[2];
+                q["sum"] = it.second[3];
+                data.push_back(q);
             }
+            // for(int i=0;i<(int)tmp.size();++i){
+            //     data[i]["id"] = tmp[i][1];
+            //     data[i]["size"] = tmp[i][0];
+            //     data[i]["read"] = tmp[i][2];
+            //     data[i]["write"] = tmp[i][3];
+            //     data[i]["sum"] = tmp[i][4];
+            // }
             json["data"]=data;
             response->setJson(json);
             return 0;
