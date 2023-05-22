@@ -102,6 +102,8 @@ private:
 
     bool is_stop;
 
+    bool is_start;
+
     MutexType m_mutex;
 
     //int m_seqid;

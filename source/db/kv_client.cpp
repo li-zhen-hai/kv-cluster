@@ -280,14 +280,14 @@ std::map<std::string,std::string> kv_client::GetAllKV(){
 //     return {};
 // }
 
-std::unordered_map<std::string,std::pair<std::string,uint64_t>> kv_client::GetSnapshot(){
+std::map<std::string,std::string> kv_client::GetSnapshot(){
     if(isclose)
         throw "server close";
     calls++;
     std::shared_ptr<int> flag(nullptr,[this](int*){
         (this->calls)--;
     });
-    std::unordered_map<std::string,std::pair<std::string,uint64_t>> ret;
+    std::map<std::string,std::string> ret;
     for(size_t i=0;i<m_servers.size();++i){
         if(!m_servers[i]->isConnected()){
             go [this,i] {
@@ -298,7 +298,7 @@ std::unordered_map<std::string,std::pair<std::string,uint64_t>> kv_client::GetSn
             };
             continue;
         }
-        auto res = m_servers[i]->call<std::unordered_map<std::string,std::pair<std::string,uint64_t>>>("GetNowSnapshot");
+        auto res = m_servers[i]->call<std::map<std::string,std::string>>("GetNowSnapshot");
         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
             return res.getVal();
         }
@@ -306,7 +306,7 @@ std::unordered_map<std::string,std::pair<std::string,uint64_t>> kv_client::GetSn
     return ret;
 }
 
-bool kv_client::ApplySnapshot(std::unordered_map<std::string,std::pair<std::string,uint64_t>> shot){
+bool kv_client::ApplySnapshot(std::map<std::string,std::string> shot){
     if(isclose)
         throw "server close";
     calls++;

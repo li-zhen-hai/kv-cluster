@@ -26,6 +26,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,bool asyn
     ,r_server(nullptr)
     ,m_server(nullptr)
     ,is_stop(false)
+    ,is_start(false)
     ,m_seqid({0})
     ,reads({0})
     ,writes({0}){
@@ -84,6 +85,8 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,bool asyn
 }
 
 void kv_server::start(){
+
+    is_start = true;
 
     r_server->start();
     m_server->start();
@@ -423,7 +426,10 @@ kv_server::KVSnapshot kv_server::GetSnapshot(){
     int fd = open(snapshot_name.c_str(),O_RDONLY,0777);
     if(fd == -1){
         STAR_LOG_ERROR(g_logger) << "No create snapshot!";
-        return shot;
+        if(is_start)
+            return GetNowSnapshot();
+        else
+            return shot;
     }
     int len = lseek(fd,0,SEEK_END);
     char* addr = (char*)mmap(NULL,len,PROT_READ,MAP_PRIVATE,fd,0);

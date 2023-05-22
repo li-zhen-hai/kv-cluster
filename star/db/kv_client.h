@@ -42,9 +42,9 @@ public:
 
     std::string get(const std::string& key);
 
-    std::unordered_map<std::string,std::pair<std::string,uint64_t>> GetSnapshot();
+    std::map<std::string,std::string> GetSnapshot();
 
-    bool ApplySnapshot(std::unordered_map<std::string,std::pair<std::string,uint64_t>> shot);
+    bool ApplySnapshot(std::map<std::string,std::string> shot);
 
     std::map<std::string,std::string> GetAllKV();
 
