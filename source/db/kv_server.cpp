@@ -58,6 +58,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,bool asyn
     auto fun13 = std::function<std::map<std::string,std::string>()>(std::bind(&kv_server::GetAllKV,this));
     auto fun14 = std::function<std::pair<uint64_t,uint64_t>()>(std::bind(&kv_server::GetOps,this));
     auto fun15 = std::function<int()>(std::bind(&kv_server::GetState,this));
+    auto fun16 = std::function<std::map<std::string,std::string>()>(std::bind(&kv_server::GetNowSnapshot,this));
 
     m_server->registerMethod("set",fun1);
     m_server->registerMethod("get",fun2);
@@ -73,6 +74,7 @@ kv_server::kv_server(std::string m_ip,std::string r_ip,size_t capacity,bool asyn
     m_server->registerMethod("GetAllKV",fun13);
     m_server->registerMethod("GetOps",fun14);
     m_server->registerMethod("GetState",fun15);
+    m_server->registerMethod("GetNowSnapshot",fun16);
 
     while(!m_server->bind(address)){
         sleep(1);
@@ -357,6 +359,22 @@ bool kv_server::applylog(std::string mode,std::string key,std::string value,uint
 //     }
 //     return ret;
 // }
+
+
+kv_server::KVSnapshot kv_server::GetNowSnapshot(){
+    const leveldb::Snapshot* s = db->GetSnapshot();
+    kv_server::KVSnapshot shot;
+    leveldb::ReadOptions options;
+    options.snapshot = s;
+
+    leveldb::Iterator* iter = db->NewIterator(options);
+        
+    for(iter->SeekToFirst();iter->Valid();iter->Next()){
+            //std::cout << iter->key().ToString() <<" : " << iter->value().ToString() << std::endl;
+        shot[iter->key().ToString()] = iter->value().ToString();
+    }
+    return shot;
+}
 
 kv_server::KVSnapshot kv_server::GetSnapshot(){
     if(r_server->getState() != Raft_Server::State::Leader_State)

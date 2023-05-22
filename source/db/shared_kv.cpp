@@ -13,7 +13,8 @@ shared_kv::shared_kv(bool autoload,hash_function func)
     ,auto_reload(autoload)
     ,m_server(new rpc::RpcServer())
     ,m_hash(func)
-    ,idx({0}){
+    ,idx({0})
+    ,pos_index({0}){
 }
 
 void shared_kv::start(std::string ip){
@@ -75,7 +76,8 @@ int shared_kv::addserver(std::vector<std::string> ips){
     size_t pos = -1;
     {
         MutexType::Lock lock(m_mutex);
-        pos = m_sessions.size();
+        pos = pos_index;
+        pos_index = pos_index+1;
         m_sessions[pos] = session;
         
         std::sort(points.begin(),points.end());
@@ -146,6 +148,7 @@ bool shared_kv::delpart(int id,int pos){
     }
     if(p.pos != id || (int)p.hash != pos)
         return false;
+    STAR_LOG_DEBUG(STAR_LOG_ROOT()) << "DelPart pos " << pos;
     return delserver(p.hash);
 }
 
@@ -167,11 +170,12 @@ bool shared_kv::DelGroup(int id){
 
 bool shared_kv::delserver(int pos){
     int next = -1;
-    for(auto it : points){
+    for(auto& it : points){
         if((int)it.hash > pos) {
             MutexType::Lock lock(m_mutex);
             next = it.pos;
             it.pos = -1;
+            break;
         }
     }
     if(next == -1 && points.size() == 1) {
@@ -191,6 +195,7 @@ bool shared_kv::delserver(int pos){
             break;
         }
     }
+    STAR_LOG_INFO(STAR_LOG_ROOT()) << "next "<<next <<",now "<<now;
     if(now == -1)
         return false;
     auto snap = m_sessions[now]->GetSnapshot();
@@ -203,6 +208,7 @@ bool shared_kv::delserver(int pos){
             if((int)it.hash > pos ) {
                 MutexType::Lock lock(m_mutex);
                 it.pos = next;
+                break;
             }
         }
     }

@@ -172,6 +172,7 @@ private:
     MutexType m_mutex;
 
     std::atomic<uint64_t> idx;
+    std::atomic<uint64_t> pos_index;
 };
 
 

@@ -298,7 +298,7 @@ std::unordered_map<std::string,std::pair<std::string,uint64_t>> kv_client::GetSn
             };
             continue;
         }
-        auto res = m_servers[i]->call<std::unordered_map<std::string,std::pair<std::string,uint64_t>>>("GetSnapshot");
+        auto res = m_servers[i]->call<std::unordered_map<std::string,std::pair<std::string,uint64_t>>>("GetNowSnapshot");
         if(res.getCode() == star::rpc::RpcState::RPC_SUCCESS){
             return res.getVal();
         }

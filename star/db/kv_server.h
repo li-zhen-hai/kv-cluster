@@ -73,6 +73,8 @@ private:
 
     // void applylog(LogEntry entry);
 
+    KVSnapshot GetNowSnapshot();
+
     KVSnapshot GetSnapshot();
 
     bool ApplySnapshot(KVSnapshot shot,bool f = false);
